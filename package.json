@@ -8,8 +8,10 @@
 		"test": "vitest"
 	},
 	"dependencies": {
+		"fs": "^0.0.1-security",
 		"google-protobuf": "^3.21.2",
-		"itty-router": "^2.6.6"
+		"itty-router": "^2.6.6",
+		"path": "^0.12.7"
 	},
 	"devDependencies": {
 		"wrangler": "^3.0.0"
