@@ -1,7 +1,9 @@
 **Installation**
-1. Clone the source
+1. Clone and open the source
 
 `git clone https://github.com/tylertms/ei_worker/`
+
+`cd ei_worker`
 
 2. Install the required packages
    
@@ -9,6 +11,6 @@
   
 3. Run/deploy the worker
    
-`wrangler run dev` / `wrangler run deploy`
+`wrangler dev` / `wrangler deploy`
 
 
