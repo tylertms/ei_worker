@@ -35,9 +35,9 @@ Contact any of the following published endpoints through browser/code
 	`cd ei_worker`
 
 2. Install the required packages
-   
-  `npm install`
+
+   `npm install`
   
-3. Run/deploy the worker
+4. Run/deploy the worker
    
 	`wrangler dev` / `wrangler deploy`
