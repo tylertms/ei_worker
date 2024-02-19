@@ -1,21 +1,6 @@
-# Installation 
-1. Clone and open the source
-
-`git clone https://github.com/tylertms/ei_worker/`
-
-`cd ei_worker`
-
-2. Install the required packages
-   
-  `npm install`
-  
-3. Run/deploy the worker
-   
-`wrangler dev` / `wrangler deploy`
-
 # Usage
 
-Contact any of the following endpoints through browser/code
+Contact any of the following published endpoints through browser/code
 
 - Fetch a contract archive:
 
@@ -42,3 +27,17 @@ Contact any of the following endpoints through browser/code
 	`https://ei_worker.tylertms.workers.dev/activeArtifacts?EID=EIxxxxxxxxxxxxxxxx&contract=KEV-ID`
 
 
+# Installation (for development purposes)
+1. Clone and open the source
+
+	`git clone https://github.com/tylertms/ei_worker/`
+
+	`cd ei_worker`
+
+2. Install the required packages
+   
+  `npm install`
+  
+3. Run/deploy the worker
+   
+	`wrangler dev` / `wrangler deploy`
