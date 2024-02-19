@@ -18,7 +18,7 @@ async function handleRequest(request) {
 		if (handler === undefined) {
 			return new Response("Error: Endpoint \"" + path + "\" not found.", { status: 404 });
 		}
-		return await handlers[path].handle(request, { proto, baseURL, decoder });
+		return handlers[path].handle(request, { proto, baseURL, decoder });
 	} catch (error) {
 		return new Response(error, { status: 404 });
 	}
