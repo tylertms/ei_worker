@@ -7,7 +7,8 @@ const handlers = {
 	"contract": await import('./handlers/contract.js'), 
 	"backup": await import('./handlers/backup.js'), 
 	"periodicals": await import('./handlers/periodicals.js'), 
-	"archive": await import('./handlers/archive.js')
+	"archive": await import('./handlers/archive.js'),
+	"activeArtifacts": await import('./handlers/activeArtifacts.js')
 }
 
 async function handleRequest(request) {
