@@ -4,3 +4,4 @@
 *.lock
 *.log
 /.wrangler
+.editorconfig
