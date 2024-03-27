@@ -27,7 +27,7 @@ async function handle(request, context) {
         
         var farmIndex = 0;
         if (contract !== null) {
-            farmIndex = backup.farmsList.findIndex(c => c.contract_id === contract);
+            farmIndex = backup.farmsList.findIndex(c => c.contractId === contract);
         } else {
             farmIndex = backup.farmsList.findIndex(c => c.farmType === 2);
         }
