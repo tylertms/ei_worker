@@ -10,6 +10,10 @@ Contact any of the following published endpoints through browser/code
 
 	`https://ei_worker.tylertms.workers.dev/backup?EID=EIxxxxxxxxxxxxxxxx`
 
+- Get CSV-formatted farm overview:
+
+	`https://ei_worker.tylertms.workers.dev/yonFarmInfo?EID=EIxxxxxxxxxxxxxxxx`
+
 - Get current contracts and events (periodicals):
 
 	`https://ei_worker.tylertms.workers.dev/periodicals?EID=EIxxxxxxxxxxxxxxxx`
