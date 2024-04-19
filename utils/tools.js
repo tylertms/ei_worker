@@ -41,4 +41,35 @@ function convertGrade(gradeId) {
     return grade_nums[gradeId ?? 0];
 }
 
-module.exports = { bigNumberToString, convertGrade };
+function getEggName(num) {
+    switch (num) {
+        case 1: return "EDIBLE";
+        case 2: return "SUPERFOOD";
+        case 3: return "MEDICAL";
+        case 4: return "ROCKET_FUEL";
+        case 5: return "SUPER_MATERIAL";
+        case 6: return "FUSION";
+        case 7: return "QUANTUM";
+        case 8: return "IMMORTALITY";
+        case 9: return "TACHYON";
+        case 10: return "GRAVITON";
+        case 11: return "DILITHIUM";
+        case 12: return "PRODIGY";
+        case 13: return "TERRAFORM";
+        case 14: return "ANTIMATTER";
+        case 15: return "DARK_MATTER";
+        case 16: return "AI";
+        case 17: return "NEBULA";
+        case 18: return "UNIVERSE";
+        case 19: return "ENLIGHTENMENT";
+        case 100: return "CHOCOLATE";
+        case 101: return "EASTER";
+        case 102: return "WATERBALLOON";
+        case 103: return "FIREWORK";
+        case 104: return "PUMPKIN";
+        default: return "UNKNOWN";
+    }
+}
+
+
+module.exports = { bigNumberToString, convertGrade, getEggName };
