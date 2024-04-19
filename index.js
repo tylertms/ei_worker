@@ -8,7 +8,8 @@ const handlers = {
 	"backup": await import('./handlers/backup.js'), 
 	"periodicals": await import('./handlers/periodicals.js'), 
 	"archive": await import('./handlers/archive.js'),
-	"activeArtifacts": await import('./handlers/activeArtifacts.js')
+	"activeArtifacts": await import('./handlers/activeArtifacts.js'),
+	"yonFarmInfo": await import('./handlers/yonFarmInfo.js')
 }
 
 async function handleRequest(request) {
