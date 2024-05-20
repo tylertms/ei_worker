@@ -8,6 +8,7 @@ const handlers = {
 	"backup": await import('./handlers/backup.js'), 
 	"periodicals": await import('./handlers/periodicals.js'), 
 	"archive": await import('./handlers/archive.js'),
+	"archiveCxPchange": await import('./handlers/minmaxCxPChange.js'),
 	"activeArtifacts": await import('./handlers/activeArtifacts.js'),
 	"yonFarmInfo": await import('./handlers/yonFarmInfo.js')
 }
