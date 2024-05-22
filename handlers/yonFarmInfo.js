@@ -9,13 +9,13 @@ async function handle(request, context) {
 		const periodicals = JSON.parse(await (await handlePeriodicals(request,context)).text());
 		let csv = "";
 
-		csv += "SE,PE,Grade,";
+		csv += "SE,PE,Grade,PermitLevel,";
 		for (let i = 0; i < backup.game.epicResearchList.length; i++) {
 			csv += backup.game.epicResearchList[i].id.toUpperCase() + ",";
 		}
 		csv = csv.slice(0, -1) + "\n";
 
-		csv += bigNumberToString(backup.game.soulEggsD, 3) + "," + backup.game.eggsOfProphecy + "," + convertGrade(backup.contracts.lastCpi.grade) + ","
+		csv += bigNumberToString(backup.game.soulEggsD, 3) + "," + backup.game.eggsOfProphecy + "," + convertGrade(backup.contracts.lastCpi.grade) + "," + backup.game.permitLevel + ","
 		for (let i = 0; i < backup.game.epicResearchList.length; i++) {
 			csv += backup.game.epicResearchList[i].level + ",";
 		}

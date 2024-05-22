@@ -30,6 +30,10 @@ Contact any of the following published endpoints through browser/code
 
 	`https://ei_worker.tylertms.workers.dev/activeArtifacts?EID=EIxxxxxxxxxxxxxxxx&contract=KEV-ID`
 
+- Get highest and lowest change in CS upon rerunning contract from backup:
+
+	`https://ei_worker.tylertms.workers.dev/minmaxCxPChange?EID=EIxxx`
+
 
 # Installation (for development purposes)
 1. Clone and open the source
