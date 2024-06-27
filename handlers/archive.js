@@ -1,3 +1,5 @@
+import { Buffer } from 'node:buffer';
+
 async function handle(request, context) {
 	const EID = new URL(request.url).searchParams.get('EID');
 
@@ -6,7 +8,7 @@ async function handle(request, context) {
 			.setEiUserId(EID)
 			.setClientVersion(99);
 
-		const b64encoded = btoa(context.decoder.decode(bri.serializeBinary()));
+		const b64encoded = Buffer.from(context.decoder.decode(bri.serializeBinary())).toString('base64');
 
 		const params = new URLSearchParams();
 		params.append('data', b64encoded);

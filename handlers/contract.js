@@ -1,3 +1,5 @@
+import { Buffer } from 'node:buffer';
+
 async function handle(request, context) {
 	const reqParams = new URL(request.url).searchParams
 	let EID = reqParams.get("EID")
@@ -15,7 +17,7 @@ async function handle(request, context) {
 			.setUserId(EID)
 			.setRinfo(bri)
 
-		const b64encoded = btoa(context.decoder.decode(ccsr.serializeBinary()));
+		const b64encoded = Buffer.from(context.decoder.decode(ccsr.serializeBinary())).toString('base64');
 
 		const params = new URLSearchParams();
 		params.append('data', b64encoded);
