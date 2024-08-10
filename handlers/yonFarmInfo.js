@@ -56,7 +56,6 @@ async function handle(request, context) {
 		});
 		csv = csv.slice(0, -1) + "\nCash,";
 		backup.farmsList.forEach(farm => {
-			console.log(farm)
 			csv += bigNumberToString(farm.cashEarned - farm.cashSpent, 3) + ",";
 		})
 		csv = csv.slice(0, -1) + "\n";
