@@ -1,4 +1,4 @@
-// source: src/utils/ei.proto
+// source: ei.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -59165,10 +59165,10 @@ proto.ei.MailDB.prototype.clearMailList = function() {
 
 /**
  * optional bytes tips_db_data = 2;
- * @return {!(string|Uint8Array)}
+ * @return {string}
  */
 proto.ei.MailDB.prototype.getTipsDbData = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
@@ -74793,10 +74793,10 @@ proto.ei.AuthenticatedMessage.serializeBinaryToWriter = function(message, writer
 
 /**
  * optional bytes message = 1;
- * @return {!(string|Uint8Array)}
+ * @return {string}
  */
 proto.ei.AuthenticatedMessage.prototype.getMessage = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 

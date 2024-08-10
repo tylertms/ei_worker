@@ -71,5 +71,28 @@ function getEggName(num) {
     }
 }
 
+function getDimension(num) {
+    switch (num) {
+        case 0: return "INVALID";
+        case 1: return "EARNINGS";
+        case 2: return "AWAY_EARNINGS";
+        case 3: return "INTERNAL_HATCHERY_RATE";
+        case 4: return "EGG_LAYING_RATE";
+        case 5: return "SHIPPING_CAPACITY";
+        case 6: return "HAB_CAPACITY";
+        case 7: return "VEHICLE_COST";
+        case 8: return "HAB_COST";
+        case 9: return "RESEARCH_COST";
+        default: return "UNKNOWN";
+    }
+}
 
-module.exports = { bigNumberToString, convertGrade, getEggName };
+function getBuffLevel(maxFarmReached) {
+    if (maxFarmReached >= 10000000000) return 4;
+    if (maxFarmReached >= 1000000000) return 3;
+    if (maxFarmReached >= 100000000) return 2;
+    if (maxFarmReached >= 10000000) return 1;
+    return NaN; // return NaN if no level has been reached
+}
+
+module.exports = { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel };
