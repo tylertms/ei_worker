@@ -88,7 +88,7 @@ async function handle(request, context) {
 			return acc;
 		}, {});
 
-		let colleggtiblesSection = "\n\nColleggtibles\nID,Buff Type,Value\n";
+		let colleggtiblesSection = "\n\nColleggtibles\nID,Buff Type,Value, Image link\n";
 
 		for (const customEggId in groupedByCustomEggId) {
 			const maxFarmReachedValues = groupedByCustomEggId[customEggId].map(contract => contract.maxFarmReached);
@@ -98,6 +98,7 @@ async function handle(request, context) {
 
 			if (customEgg) {
 				const buffLevel = getBuffLevel(maxFarmReached);
+				const eggImageLink = customEgg.icon.url
 
 				if (!isNaN(buffLevel)) {
 					const buffsList = customEgg.buffsList;
@@ -109,7 +110,7 @@ async function handle(request, context) {
 
 					const buffType = getDimension(dimension);
 
-					colleggtiblesSection += `${customEggId},${buffType},${buffValue}\n`;
+					colleggtiblesSection += `${customEggId},${buffType},${buffValue}, ${eggImageLink}\n`;
 				}
 			} else {
 				colleggtiblesSection += `${customEggId},N/A,N/A\n`;
