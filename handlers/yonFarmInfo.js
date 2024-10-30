@@ -8,6 +8,10 @@ async function handle(request, context) {
 		const periodicals = JSON.parse(await (await handlePeriodicals(request, context)).text());
 		let csv = "";
 
+		const contractsArchiveList = backup.contracts.archiveList;
+		const activeContractsList = backup.contracts.contractsList;
+		const combinedContractsList = contractsArchiveList.concat(activeContractsList);
+
 		csv += "SE,PE,Grade,PermitLevel,";
 		for (let i = 0; i < backup.game.epicResearchList.length; i++) {
 			csv += backup.game.epicResearchList[i].id.toUpperCase() + ",";
@@ -44,7 +48,14 @@ async function handle(request, context) {
 		});
 		csv = csv.slice(0, -1) + "\nEgg,";
 		backup.farmsList.forEach(farm => {
-			csv += getEggName(farm.eggType) + ",";
+			let eggName = getEggName(farm.eggType)
+			if (eggName === "CUSTOM") {
+				let matchingContract = combinedContractsList.find(contract => contract.contract.identifier === farm.contractId).contract
+				if (matchingContract) {
+					eggName = matchingContract.customEggId;
+				}
+			}
+			csv += eggName + ",";
 		});
 		csv = csv.slice(0, -1) + "\nPopulation,";
 		backup.farmsList.forEach(farm => {
@@ -67,11 +78,7 @@ async function handle(request, context) {
 			csv = csv.slice(0, -1) + "\n";
 		}
 
-		const contractsArchiveList = backup.contracts.archiveList;
-		const activeContractsList = backup.contracts.contractsList;
-		const combinedList = contractsArchiveList.concat(activeContractsList);
-
-		const groupedByCustomEggId = combinedList.reduce((acc, contract) => {
+		const groupedByCustomEggId = combinedContractsList.reduce((acc, contract) => {
 			if (contract.contract.egg === 200 && contract.hasOwnProperty('maxFarmSizeReached')) {
 				const key = contract.contract.customEggId;
 				if (key) {
@@ -88,32 +95,24 @@ async function handle(request, context) {
 			return acc;
 		}, {});
 
-		let colleggtiblesSection = "\n\nColleggtibles\nID,Buff Type,Value\n";
+		let colleggtiblesSection = "\n\nColleggtibles\nID,Buff Type,Value,Image URL,Value,Name\n";
 
-		for (const customEggId in groupedByCustomEggId) {
-			const maxFarmReachedValues = groupedByCustomEggId[customEggId].map(contract => contract.maxFarmReached);
+		for (const customEgg of periodicals.contracts.customEggsList) {
+			const customEggId = customEgg.identifier
+			const maxFarmReachedValues = groupedByCustomEggId[customEggId]?.map(contract => contract.maxFarmReached) || [0];;
 			const maxFarmReached = Math.max(...maxFarmReachedValues);
+			const buffLevel = getBuffLevel(maxFarmReached);
 
-			const customEgg = periodicals.contracts.customEggsList.find(egg => egg.identifier === customEggId);
+			const buffsList = customEgg.buffsList;
+			const index = Math.min(buffsList.length - 1, buffLevel - 1); // Cap index at the last element if buffLevel exceeds bounds
+			const buff = buffsList[index];
+			const dimension = buffsList[0].dimension || 0;
+			const buffValue = buff ? buff.value : 1
 
-			if (customEgg) {
-				const buffLevel = getBuffLevel(maxFarmReached);
+			const buffType = getDimension(dimension);
+			const eggImageLink = customEgg.icon.url
 
-				if (!isNaN(buffLevel)) {
-					const buffsList = customEgg.buffsList;
-
-					const index = Math.min(buffsList.length - 1, buffLevel - 1); // Cap index at the last element if buffLevel exceeds bounds
-					const buff = buffsList[index];
-					const dimension = buff?.dimension || 0;
-					const buffValue = buff ? buff.value : 'N/A'
-
-					const buffType = getDimension(dimension);
-
-					colleggtiblesSection += `${customEggId},${buffType},${buffValue}\n`;
-				}
-			} else {
-				colleggtiblesSection += `${customEggId},N/A,N/A\n`;
-			}
+			colleggtiblesSection += `${customEggId},${buffType},${buffValue}, ${eggImageLink}, ${customEgg.value}, ${customEgg.name}\n`;
 		}
 		csv += colleggtiblesSection;
 

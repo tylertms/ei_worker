@@ -67,6 +67,7 @@ function getEggName(num) {
         case 102: return "WATERBALLOON";
         case 103: return "FIREWORK";
         case 104: return "PUMPKIN";
+        case 200: return "CUSTOM";
         default: return "UNKNOWN";
     }
 }
