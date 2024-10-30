@@ -78,8 +78,6 @@ async function handle(request, context) {
 			csv = csv.slice(0, -1) + "\n";
 		}
 
-
-
 		const groupedByCustomEggId = combinedContractsList.reduce((acc, contract) => {
 			if (contract.contract.egg === 200 && contract.hasOwnProperty('maxFarmSizeReached')) {
 				const key = contract.contract.customEggId;
@@ -97,14 +95,11 @@ async function handle(request, context) {
 			return acc;
 		}, {});
 
-		let colleggtiblesSection = "\n\nColleggtibles\nID,Buff Type,Value, Image link, value, fullName\n";
-
-
+		let colleggtiblesSection = "\n\nColleggtibles\nID,Buff Type,Value,Image URL,Value,Name\n";
 
 		for (const customEgg of periodicals.contracts.customEggsList) {
-
 			const customEggId = customEgg.identifier
-			const maxFarmReachedValues = groupedByCustomEggId[customEggId]?.map(contract => contract.maxFarmReached) || [0];			;
+			const maxFarmReachedValues = groupedByCustomEggId[customEggId]?.map(contract => contract.maxFarmReached) || [0];;
 			const maxFarmReached = Math.max(...maxFarmReachedValues);
 			const buffLevel = getBuffLevel(maxFarmReached);
 
@@ -117,21 +112,17 @@ async function handle(request, context) {
 			const buffType = getDimension(dimension);
 			const eggImageLink = customEgg.icon.url
 
-
-
-
 			colleggtiblesSection += `${customEggId},${buffType},${buffValue}, ${eggImageLink}, ${customEgg.value}, ${customEgg.name}\n`;
-		
-	}
+		}
 		csv += colleggtiblesSection;
 
-	csv = csv.slice(0, -1);
+		csv = csv.slice(0, -1);
 
-	return new Response(csv, { headers: { "Content-Type": "text/csv" } });
-} catch (error) {
-	console.log(error);
-	return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-}
+		return new Response(csv, { headers: { "Content-Type": "text/csv" } });
+	} catch (error) {
+		console.log(error);
+		return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+	}
 }
 
 module.exports = { handle };
