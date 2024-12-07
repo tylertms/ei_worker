@@ -21,9 +21,19 @@ async function handleRequest(request) {
 		if (handler === undefined) {
 			return new Response("Error: Endpoint \"" + path + "\" not found.", { status: 404 });
 		}
-		return handlers[path].handle(request, { proto, baseURL, decoder });
+		const response = await handlers[path].handle(request, { proto, baseURL, decoder });
+
+		return new Response(response.body, {
+      ...response, // Preserve the existing response options
+      headers: {
+        ...response.headers, // Preserve existing headers
+        'Access-Control-Allow-Origin': '*', // Allow all origins
+        'Access-Control-Allow-Methods': 'GET', // Allow only GET requests
+        'Access-Control-Allow-Headers': 'Content-Type', // Allow specific headers
+      },
+    });
 	} catch (error) {
-		return new Response(error, { status: 404 });
+		return new Response(error, { status: 500 });
 	}
     
 }
