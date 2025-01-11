@@ -112,9 +112,11 @@ async function handle(request, context) {
 			const buffType = getDimension(dimension);
 			const eggImageLink = customEgg.icon.url
 
-			colleggtiblesSection += `${customEggId},${buffType},${buffValue}, ${eggImageLink}, ${customEgg.value}, ${customEgg.name}\n`;
+			colleggtiblesSection += `${customEggId},${buffType},${buffValue},${eggImageLink},${customEgg.value},${customEgg.name}\n`;
 		}
 		csv += colleggtiblesSection;
+
+		let boostsSection = `\nBoosts\nName,Amount\n`
 
 		csv = csv.slice(0, -1);
 
