@@ -97,43 +97,6 @@ function getBuffLevel(maxFarmReached) {
 }
 
 
-function renameBoost(key) {
-    switch (key) {
-        case 'quantum_bulb' : return 'Quantum Bulb';
-        case 'dilithium_bulb' : return 'Dilithium Bulb';
-        case 'jimbos_blue': return "Jimbo's Bird Feed (2x earnings for 1 hr)";
-        case 'jimbos_blue_v2': return "Jimbo's Bird Feed (3x earnings for 20 mins)";
-        case 'jimbos_blue_big': return "Jimbo's Bird Feed (2x earnings for 8 hrs)";
-        case 'jimbos_orange': return "Jimbo's Bird Feed (50x earnings for 10 mins)";
-        case 'jimbos_orange_big': return "Jimbo's Bird Feed (50x earnings for 1 hr)";
-        case 'jimbos_purple': return "Jimbo's Bird Feed (10x earnings for 30 mins)";
-        case 'jimbos_purple_v2': return "Jimbo's Bird Feed (10x earnings for 15 mins)";
-        case 'jimbos_purple_big': return "Jimbo's Bird Feed (10x earnings for 2 hrs)";
-        case 'blank_check': return '+100% of Farm Value';
-        case 'subsidy_application': return '+10% of Farm Value';
-        case 'money_printer': return '+500% of Farm Value';
-        case 'tachyon_prism_blue': return 'Tachyon Prism (10x IHR for 30 mins)';
-        case 'tachyon_prism_blue_v2' : return 'Tachyon Prism (10x IHR for 10 mins)';
-        case 'tachyon_prism_blue_big': return 'Tachyon Prism (10x IHR for 4 hrs)';
-        case 'tachyon_prism_orange': return 'Tachyon Prism (1000x IHR for 10 mins)';
-        case 'tachyon_prism_orange_big': return 'Tachyon Prism (1000x IHR for 1 hr)';
-        case 'tachyon_prism_purple': return 'Tachyon Prism (100x IHR for 20 mins)';
-        case 'tachyon_prism_purple_big': return 'Tachyon Prism (100x IHR for 2 hrs)';
-        case 'boost_beacon_blue': return 'Boost Beacon (2x boosts for 30 mins)';
-        case 'boost_beacon_blue_big': return 'Boost Beacon (5x boosts for 1 hr)';
-        case 'boost_beacon_orange': return 'Boost Beacon (50x boosts for 10 mims)';
-        case 'boost_beacon_purple': return 'Boost Beacon (10x boosts for 10 mins)';
-        case 'soul_beacon_blue': return 'Soul Beacon (5x SE for 1 hr)';
-        case 'soul_beacon_blue_v2' : return 'Soul Beacon (5x SE for 30 mins)';
-        case 'soul_beacon_purple': return 'Soul Beacon (50x SE for 30 mins)';
-        case 'soul_beacon_purple_v2': return 'Soul Beacon (50x SE for 20 mins)';
-        case 'soul_beacon_orange': return 'Soul Beacon (500x SE for 10 mins)';
-        case 'soul_mirror_blue': return 'Soul Mirror (Matches top EB for 10 mins)';
-        case 'soul_mirror_purple': return 'Soul Mirror (Matches top EB for 1 hr)';
-        case 'soul_mirror_orange': return 'Soul Mirror (Matches top EB for 24 hrs)';
-        default: return 'UNKNOWN';
-    }
-}
 
 
-module.exports = { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel, renameBoost};
+module.exports = { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel };

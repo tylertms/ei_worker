@@ -1,4 +1,4 @@
-const { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel, renameBoost } = require("../utils/tools");
+const { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel } = require("../utils/tools");
 const { handle: handleBackup } = require("./backup");
 const { handle: handlePeriodicals } = require('./periodicals');
 
