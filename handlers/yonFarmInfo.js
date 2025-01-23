@@ -71,11 +71,22 @@ async function handle(request, context) {
 		})
 		csv = csv.slice(0, -1) + "\n";
 		for (let i = 0; i < backup.farmsList[0].commonResearchList.length; i++) {
-			csv += backup.farmsList[0].commonResearchList[i].id.toUpperCase() + ",";
+			let tempLine = "";
+			tempLine += backup.farmsList[0].commonResearchList[i].id.toUpperCase() + ",";
 			for (let j = 0; j < backup.farmsList.length; j++) {
-				csv += backup.farmsList[j].commonResearchList[i].level + ",";
+				tempLine += backup.farmsList[j].commonResearchList[i].level + ",";
 			}
-			csv = csv.slice(0, -1) + "\n";
+			if (i < boostIds.length) {
+				const commaCount = (tempLine.match(/,/g) || []).length; 
+				if (commaCount < 10) {
+					tempLine = tempLine.padEnd(tempLine.length + (10 - commaCount), ",");
+				}
+				tempLine += boostIds[i] + ","
+				const boost = backup.game.boostsList.find(boost => boost.boostId === boostIds[i]);
+				tempLine += (boost ? boost.count : "0") + ",";
+			}
+			tempLine = tempLine.slice(0, -1) + "\n";
+			csv += tempLine
 		}
 
 		const groupedByCustomEggId = combinedContractsList.reduce((acc, contract) => {
@@ -95,7 +106,7 @@ async function handle(request, context) {
 			return acc;
 		}, {});
 
-		let colleggtiblesSection = "\n\nColleggtibles\nID,Buff Type,Value,Image URL,Value,Name\n";
+		let colleggtiblesSection = "\n\nColleggtibles\nID,Buff Type,Buff Value,Image URL,Egg Value,Name\n";
 
 		for (const customEgg of periodicals.contracts.customEggsList) {
 			const customEggId = customEgg.identifier
@@ -112,7 +123,7 @@ async function handle(request, context) {
 			const buffType = getDimension(dimension);
 			const eggImageLink = customEgg.icon.url
 
-			colleggtiblesSection += `${customEggId},${buffType},${buffValue}, ${eggImageLink}, ${customEgg.value}, ${customEgg.name}\n`;
+			colleggtiblesSection += `${customEggId},${buffType},${buffValue},${eggImageLink},${customEgg.value},${customEgg.name}\n`;
 		}
 		csv += colleggtiblesSection;
 
@@ -126,3 +137,40 @@ async function handle(request, context) {
 }
 
 module.exports = { handle };
+
+
+const boostIds = [
+    "jimbos_blue",
+    "jimbos_blue_v2",
+    "jimbos_blue_big",
+    "jimbos_purple",
+    "jimbos_purple_v2",
+    "jimbos_purple_big",
+    "jimbos_orange",
+    "jimbos_orange_big",
+    "subsidy_application",
+    "blank_check",
+    "money_printer",
+    "tachyon_prism_blue",
+    "tachyon_prism_blue_v2",
+    "tachyon_prism_blue_big",
+    "tachyon_prism_purple",
+    "tachyon_prism_purple_v2",
+    "tachyon_prism_purple_big",
+    "tachyon_prism_orange",
+    "tachyon_prism_orange_big",
+    "soul_beacon_blue",
+    "soul_beacon_blue_v2",
+    "soul_beacon_purple",
+    "soul_beacon_purple_v2",
+    "soul_beacon_orange",
+    "boost_beacon_blue",
+    "boost_beacon_purple",
+    "boost_beacon_blue_big",
+    "boost_beacon_orange",
+    "soul_mirror_blue",
+    "soul_mirror_purple",
+    "soul_mirror_orange",
+    "quantum_bulb",
+    "dilithium_bulb"
+];
