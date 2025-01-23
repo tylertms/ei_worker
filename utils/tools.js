@@ -96,7 +96,4 @@ function getBuffLevel(maxFarmReached) {
     return NaN; // return NaN if no level has been reached
 }
 
-
-
-
 module.exports = { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel };
