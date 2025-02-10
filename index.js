@@ -13,7 +13,8 @@ const handlers = {
 	"yonFarmInfo": await import('./handlers/yonFarmInfo.js'),
 	"leaderboard": await import('./handlers/leaderboard.js'),
 	"afx_config": await import('./handlers/afx_config.js'),
-	"leaderboard_info": await import('./handlers/leaderboard_info.js')
+	"leaderboard_info": await import('./handlers/leaderboard_info.js'),
+	"season_info": await import('./handlers/season_info.js')
 }
 
 async function handleRequest(request, env) {
