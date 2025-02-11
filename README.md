@@ -1,56 +1,42 @@
 # Usage
 
-Contact any of the following published endpoints through browser/code
+Contact any of the following published endpoints through a browser or code.
 
-- Fetch a contract archive:
+**Base URL:**  
+`https://ei_worker.tylertms.workers.dev`
 
-	`https://ei_worker.tylertms.workers.dev/archive?EID=EIxxxxxxxxxxxxxxxx`
+## Data Archives & Backups  
+- **Fetch a contract archive:**  
+  [`/archive?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/archive?EID=EIxxxx)  
+- **Fetch a backup:**  
+  [`/backup?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/backup?EID=EIxxxx)  
 
-- Fetch a backup:
+## Farm & Contract Information  
+- **Get CSV-formatted farm overview:**  
+  [`/yonFarmInfo?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/yonFarmInfo?EID=EIxxxx)  
+- **Get current contracts and events (periodicals):**  
+  [`/periodicals?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/periodicals?EID=EIxxxx)  
+- **Get contract info (coop status):**  
+  [`/contract?EID=EIxxxx&contract=KEV-ID&coop=COOP-NAME`](https://ei_worker.tylertms.workers.dev/contract?EID=EIxxxx&contract=KEV-ID&coop=COOP-NAME)  
 
-	`https://ei_worker.tylertms.workers.dev/backup?EID=EIxxxxxxxxxxxxxxxx`
+## Artifacts & Configurations  
+- **Get equipped artifacts (home farm):**  
+  [`/activeArtifacts?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/activeArtifacts?EID=EIxxxx)  
+- **Get equipped artifacts (contract farm):**  
+  [`/activeArtifacts?EID=EIxxxx&contract=KEV-ID`](https://ei_worker.tylertms.workers.dev/activeArtifacts?EID=EIxxxx&contract=KEV-ID)  
+- **Get artifacts config:**  
+  [`/afx_config?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/afx_config?EID=EIxxxx)  
 
-- Get CSV-formatted farm overview:
+## CS & Leaderboards  
+- **Get highest/lowest CS change from backup:**  
+  [`/minmaxCxPChange?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/minmaxCxPChange?EID=EIxxxx)  
+- **Get CS leaderboard:**  
+  [`/leaderboard?EID=EIxxxx&scope=SCOPE&grade=GRADE`](https://ei_worker.tylertms.workers.dev/leaderboard?EID=EIxxxx&scope=SCOPE&grade=GRADE)  
+  _Scope: use `/leaderboard_info` for available codes_  
+  _Grade: `1` = C, `2` = B, `3` = A, `4` = AA, `5` = AAA_  
+- **Get CS leaderboard info:**  
+  [`/leaderboard_info`](https://ei_worker.tylertms.workers.dev/leaderboard_info)  
 
-	`https://ei_worker.tylertms.workers.dev/yonFarmInfo?EID=EIxxxxxxxxxxxxxxxx`
-
-- Get current contracts and events (periodicals):
-
-	`https://ei_worker.tylertms.workers.dev/periodicals?EID=EIxxxxxxxxxxxxxxxx`
-
-- Get information about a contract:
-
-	`https://ei_worker.tylertms.workers.dev/contract?EID=EIxxxxxxxxxxxxxxxx&contract=KEV-ID&coop=COOP-NAME`
-
-- Get currently equipped artifacts (on home farm):
-
-	`https://ei_worker.tylertms.workers.dev/activeArtifacts?EID=EIxxxxxxxxxxxxxxxx`
-
-- Get currently equipped artifacts (on contract farm):
-
-	`https://ei_worker.tylertms.workers.dev/activeArtifacts?EID=EIxxxxxxxxxxxxxxxx&contract=KEV-ID`
-
-- Get highest and lowest change in CS upon rerunning contract from backup:
-
-	`https://ei_worker.tylertms.workers.dev/minmaxCxPChange?EID=EIxxx`
-
-- Get a CS leaderboard:
-
-	`https://ei_worker.tylertms.workers.dev/leaderboard?EID=EIxxx&scope=scope_code&grade=[1-5]`
-		- scope, as defined by the `code` variables of /get_leaderboard info
-		- grade, 1 for C, 2 for B, etc.
-
-- Get CS leaderboard info:
-
-	`https://ei_worker.tylertms.workers.dev/leaderboard_info`
-
-- Get artifacts config:
-
-	`https://ei_worker.tylertms.workers.dev/afx_config?EID=EIxxx`
-
-- Get seasonal rewards info:
-
-	`https://ei_worker.tylertms.workers.dev/season_info`
 
 # Installation (for development purposes)
 1. Clone and open the source
