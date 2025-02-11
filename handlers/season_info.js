@@ -5,7 +5,6 @@ async function handle(request, context) {
 		});
 
 		const text = await response.text();
-		console.log(text);
 		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
 		const lbresp = context.proto.ContractSeasonInfos.deserializeBinary(authMessage.message);
 		const string = JSON.stringify(lbresp.toObject());

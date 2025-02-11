@@ -34,6 +34,23 @@ Contact any of the following published endpoints through browser/code
 
 	`https://ei_worker.tylertms.workers.dev/minmaxCxPChange?EID=EIxxx`
 
+- Get a CS leaderboard:
+
+	`https://ei_worker.tylertms.workers.dev/leaderboard?EID=EIxxx&scope=scope_code&grade=[1-5]`
+		- scope, as defined by the `code` variables of /get_leaderboard info
+		- grade, 1 for C, 2 for B, etc.
+
+- Get CS leaderboard info:
+
+	`https://ei_worker.tylertms.workers.dev/leaderboard_info`
+
+- Get artifacts config:
+
+	`https://ei_worker.tylertms.workers.dev/afx_config?EID=EIxxx`
+
+- Get seasonal rewards info:
+
+	`https://ei_worker.tylertms.workers.dev/season_info`
 
 # Installation (for development purposes)
 1. Clone and open the source

@@ -9,8 +9,7 @@ async function handle(request, context) {
 			.setClientVersion(99);
 
 		const acr = new context.proto.ArtifactsConfigurationRequest()
-			.setRinfo(bri)
-			.setClientVersion(99);
+			.setRinfo(bri);
 
 		const b64encoded = Buffer.from(context.decoder.decode(acr.serializeBinary())).toString('base64');
 
