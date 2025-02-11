@@ -6,7 +6,7 @@ async function handle(request, context) {
 	try {
 		const pr = new context.proto.GetPeriodicalsRequest()
 			.setUserId(EID)
-			.setCurrentClientVersion(99)
+			.setCurrentClientVersion(99);
 
 		const b64encoded = Buffer.from(context.decoder.decode(pr.serializeBinary())).toString('base64');
 
