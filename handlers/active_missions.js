@@ -3,20 +3,13 @@ const { createAuthHash } = require("../utils/tools");
 
 async function handle(request, context) {
     const EID = new URL(request.url).searchParams.get('EID');
-    const scope = new URL(request.url).searchParams.get('scope');
-    const grade = new URL(request.url).searchParams.get('grade');
 
     try {
         const bri = new context.proto.BasicRequestInfo()
             .setEiUserId(EID)
             .setClientVersion(99);
 
-        const leaderboardRequest = new context.proto.LeaderboardRequest()
-            .setRinfo(bri)
-            .setScope(scope)
-            .setGrade(grade);
-
-        const rawMessage = leaderboardRequest.serializeBinary();
+        const rawMessage = bri.serializeBinary();
 
 		const code = await createAuthHash(rawMessage, context.env);
 
@@ -29,16 +22,17 @@ async function handle(request, context) {
         const params = new URLSearchParams();
         params.append('data', b64encoded);
 
-        const response = await fetch(context.baseURL + "/ei_ctx/get_leaderboard", {
+        const response = await fetch(context.baseURL + "/ei_afx/get_active_missions", {
             method: "POST",
             body: params
         });
 
         const text = await response.text();
         const authRespMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
-        const lbresp = context.proto.LeaderboardResponse.deserializeBinary(authRespMessage.message);
+        const lbresp = context.proto.GetActiveMissionsResponse.deserializeBinary(authRespMessage.message);
+        const string = JSON.stringify(lbresp.toObject());
 
-        return new Response(JSON.stringify(lbresp.toObject()));
+        return new Response(string);
     } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }

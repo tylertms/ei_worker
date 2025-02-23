@@ -14,7 +14,9 @@ const handlers = {
 	"leaderboard": await import('./handlers/leaderboard.js'),
 	"afx_config": await import('./handlers/afx_config.js'),
 	"leaderboard_info": await import('./handlers/leaderboard_info.js'),
-	"season_info": await import('./handlers/season_info.js')
+	"season_info": await import('./handlers/season_info.js'),
+	"sub_status": await import('./handlers/sub_status.js'),
+	"active_missions": await import('./handlers/active_missions.js')
 }
 
 async function handleRequest(request, env) {
