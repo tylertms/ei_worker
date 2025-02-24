@@ -5,11 +5,13 @@ Contact any of the following published endpoints through a browser or code.
 **Base URL:**  
 `https://ei_worker.tylertms.workers.dev`
 
-## Data Archives & Backups  
+## Backup Info's & Ultra Status
 - **Fetch a contract archive:**  
   [`/archive?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/archive?EID=EIxxxx)  
 - **Fetch a backup:**  
   [`/backup?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/backup?EID=EIxxxx)  
+- **Check ultra status:**  
+  [`/sub_status?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/sub_status?EID=EIxxxx)  
 
 ## Farm & Contract Information  
 - **Get CSV-formatted farm overview:**  
@@ -26,6 +28,8 @@ Contact any of the following published endpoints through a browser or code.
   [`/activeArtifacts?EID=EIxxxx&contract=KEV-ID`](https://ei_worker.tylertms.workers.dev/activeArtifacts?EID=EIxxxx&contract=KEV-ID)  
 - **Get artifacts config:**  
   [`/afx_config?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/afx_config?EID=EIxxxx)  
+- **Get active missions:**  
+  [`/active_missions?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/active_missions?EID=EIxxxx)
 
 ## CS & Leaderboards  
 - **Get highest/lowest CS change from backup:**  
