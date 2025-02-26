@@ -31,13 +31,17 @@ Contact any of the following published endpoints through a browser or code.
 - **Get active missions:**  
   [`/active_missions?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/active_missions?EID=EIxxxx)
 
+- **Get a completed mission:**  
+  [`/completed_mission?EID=EIxxx&id=ID`](https://ei_worker.tylertms.workers.dev/completed_mission?EID=EIxxx&id=ID)  
+  - _id: The mission id as found in the backup_
+
 ## CS & Leaderboards  
 - **Get highest/lowest CS change from backup:**  
   [`/minmaxCxPChange?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/minmaxCxPChange?EID=EIxxxx)  
 - **Get CS leaderboard:**  
   [`/leaderboard?EID=EIxxxx&scope=SCOPE&grade=GRADE`](https://ei_worker.tylertms.workers.dev/leaderboard?EID=EIxxxx&scope=SCOPE&grade=GRADE)  
-  _Scope: use `/leaderboard_info` for available codes_  
-  _Grade: `1` = C, `2` = B, `3` = A, `4` = AA, `5` = AAA_  
+  - _Scope: use `/leaderboard_info` for available codes._  
+  - _Grade: `1` = C, `2` = B, `3` = A, `4` = AA, `5` = AAA._  
 - **Get CS leaderboard info:**  
   [`/leaderboard_info`](https://ei_worker.tylertms.workers.dev/leaderboard_info)  
 
