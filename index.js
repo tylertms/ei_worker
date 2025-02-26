@@ -16,7 +16,8 @@ const handlers = {
 	"leaderboard_info": await import('./handlers/leaderboard_info.js'),
 	"season_info": await import('./handlers/season_info.js'),
 	"sub_status": await import('./handlers/sub_status.js'),
-	"active_missions": await import('./handlers/active_missions.js')
+	"active_missions": await import('./handlers/active_missions.js'),
+	"completed_mission": await import('./handlers/completed_mission.js')
 }
 
 async function handleRequest(request, env) {
