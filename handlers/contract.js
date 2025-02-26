@@ -2,9 +2,9 @@ import { Buffer } from 'node:buffer';
 
 async function handle(request, context) {
 	const reqParams = new URL(request.url).searchParams
-	let EID = reqParams.get("EID")
-	let contract = reqParams.get("contract");
-	let coop = reqParams.get("coop")
+	const EID = reqParams.get("EID")
+	const contract = reqParams.get("contract");
+	const coop = reqParams.get("coop")
 
 	try {
 		const bri = new context.proto.BasicRequestInfo()

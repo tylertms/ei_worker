@@ -2,9 +2,10 @@ import { Buffer } from 'node:buffer';
 const { createAuthHash } = require("../utils/tools");
 
 async function handle(request, context) {
-    const EID = new URL(request.url).searchParams.get('EID');
-    const scope = new URL(request.url).searchParams.get('scope');
-    const grade = new URL(request.url).searchParams.get('grade');
+    const searchParams = new URL(request.url).searchParams;
+    const EID = searchParams.get('EID');
+    const scope = searchParams.get('scope');
+    const grade = searchParams.get('grade');
 
     try {
         const bri = new context.proto.BasicRequestInfo()
