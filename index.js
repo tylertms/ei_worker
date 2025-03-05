@@ -10,10 +10,17 @@ const handlers = {
 	"archive": await import('./handlers/archive.js'),
 	"minmaxCxPChange": await import('./handlers/minmaxCxPChange.js'),
 	"activeArtifacts": await import('./handlers/activeArtifacts.js'),
-	"yonFarmInfo": await import('./handlers/yonFarmInfo.js')
+	"yonFarmInfo": await import('./handlers/yonFarmInfo.js'),
+	"leaderboard": await import('./handlers/leaderboard.js'),
+	"afx_config": await import('./handlers/afx_config.js'),
+	"leaderboard_info": await import('./handlers/leaderboard_info.js'),
+	"season_info": await import('./handlers/season_info.js'),
+	"sub_status": await import('./handlers/sub_status.js'),
+	"active_missions": await import('./handlers/active_missions.js'),
+	"completed_mission": await import('./handlers/completed_mission.js')
 }
 
-async function handleRequest(request) {
+async function handleRequest(request, env) {
 	const path = new URL(request.url).pathname.substring(1);
 
 	try {
@@ -21,7 +28,7 @@ async function handleRequest(request) {
 		if (handler === undefined) {
 			return new Response("Error: Endpoint \"" + path + "\" not found.", { status: 404 });
 		}
-		const response = await handlers[path].handle(request, { proto, baseURL, decoder });
+		const response = await handlers[path].handle(request, { proto, baseURL, decoder, env });
 
 		return new Response(response.body, {
       ...response, // Preserve the existing response options

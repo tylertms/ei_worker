@@ -1,8 +1,10 @@
 import { Buffer } from 'node:buffer';
 
 async function handle(request, context) {
-	const EID = new URL(request.url).searchParams.get('EID');
-    const contract = new URL(request.url).searchParams.get('contract');
+	const searchParams = new URL(request.url).searchParams;
+	const EID = searchParams.get('EID');
+	const contract = searchParams.get('contract');
+
 	try {
 
 		const bri = new context.proto.BasicRequestInfo()

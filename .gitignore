@@ -5,3 +5,4 @@
 *.log
 /.wrangler
 .editorconfig
+.dev.vars

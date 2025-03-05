@@ -96,4 +96,18 @@ function getBuffLevel(maxFarmReached) {
     return NaN; // return NaN if no level has been reached
 }
 
-module.exports = { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel };
+async function createAuthHash(message, env) {
+    const magic = env.MAGIC;
+    const data = new Uint8Array(message.length + magic.length);
+    data.set(message, 0);
+    data[env.INDEX % message.length] = env.MARKER;
+    for (let i = 0; i < magic.length; i++) {
+        data[message.length + i] = magic.charCodeAt(i);
+    }
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data.buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+module.exports = { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel, createAuthHash };
