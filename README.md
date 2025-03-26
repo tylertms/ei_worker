@@ -16,6 +16,9 @@ Contact any of the following published endpoints through a browser or code.
 ## Farm & Contract Information  
 - **Get CSV-formatted farm overview:**  
   [`/yonFarmInfo?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/yonFarmInfo?EID=EIxxxx)  
+- **Get active earning/laying buffs for a given coop**  
+  [`coop_buffs?EID=EIxxx&contract=KEV-ID&coop=COOP-NAME`](https://ei_worker.tylertms.workers.dev/coop_buff?EID=EIxxxx&contract=KEV-ID&coop=COOP-NAME)
+  - *If the EID making the call is found in the coop, its buffs will be excluded.*
 - **Get current contracts and events (periodicals):**  
   [`/periodicals?EID=EIxxxx`](https://ei_worker.tylertms.workers.dev/periodicals?EID=EIxxxx)  
 - **Get contract info (coop status):**  
@@ -44,6 +47,8 @@ Contact any of the following published endpoints through a browser or code.
   - _Grade: `1` = C, `2` = B, `3` = A, `4` = AA, `5` = AAA._  
 - **Get CS leaderboard info:**  
   [`/leaderboard_info`](https://ei_worker.tylertms.workers.dev/leaderboard_info)  
+- **Get season info:**  
+  [`/season_info`](https://ei_worker.tylertms.workers.dev/season_info)
 
 
 # Installation (for development purposes)
