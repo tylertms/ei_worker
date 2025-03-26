@@ -37,7 +37,9 @@ async function handle(request, context) {
 
 		const responseText = `deflector,${deflectorBuff}\nsiab,${siabBuff}`;
 
-		return new Response(responseText);
+		return new Response(responseText, {
+			headers: { "Content-Type": "text/csv" },
+		});
 	} catch (error) {
 		return new Response(JSON.stringify({ error: error.message }), {
 			status: 500,
