@@ -88,6 +88,18 @@ async function handle(request, context) {
 			tempLine = tempLine.slice(0, -1) + "\n";
 			csv += tempLine
 		}
+		
+		csv = csv.slice(0, -1) + "\ncoop,Home,";
+		const activeCoops = activeContractsList.reduce((result, contract) => {
+			result[contract.contract.identifier] = contract.coopIdentifier;
+			return result;
+		}, {});
+		
+		backup.farmsList.forEach(farm => {
+			if (farm.contractId) {
+				csv += activeCoops[farm.contractId] + ",";
+			}
+		});
 
 		const groupedByCustomEggId = combinedContractsList.reduce((acc, contract) => {
 			if (contract.contract.egg === 200 && contract.hasOwnProperty('maxFarmSizeReached')) {
