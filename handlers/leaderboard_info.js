@@ -6,9 +6,9 @@ async function handle(request, context) {
 
 		const text = await response.text();
 		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject().message;
-		const lbresp = context.proto.LeaderboardInfo.deserializeBinary(authMessage);
+		const lbInfoResp = context.proto.LeaderboardInfo.deserializeBinary(authMessage);
 
-		const string = JSON.stringify(lbresp.toObject());
+		const string = JSON.stringify(lbInfoResp.toObject());
 
 		return new Response(string);
 	} catch (error) {
