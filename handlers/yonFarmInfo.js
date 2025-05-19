@@ -126,16 +126,20 @@ async function handle(request, context) {
 			for (let j = 0; j < backup.farmsList.length; j++) {
 				tempLine += backup.farmsList[j].commonResearchList[i].level + ",";
 			}
-			if (i < boostIds.length) {
-				const commaCount = (tempLine.match(/,/g) || []).length; 
-				if (commaCount < 10) {
-					tempLine = tempLine.padEnd(tempLine.length + (10 - commaCount), ",");
-				}
+			const commaCount = (tempLine.match(/,/g) || []).length; 
+			// Pad to ensure boosts and artifacts sections are in the same place always (horizontally at least)
+			if (commaCount < 10) {
+				tempLine = tempLine.padEnd(tempLine.length + (10 - commaCount), ",");
+			}
+			if (i < boostIds.length) { // Assume there will always be less boosts than common research items
 				tempLine += boostIds[i] + ","
 				const boost = backup.game.boostsList.find(boost => boost.boostId === boostIds[i]);
 				tempLine += (boost ? boost.count : "0") + ",";
+			} else {
+				// If we are out of boosts to add, add empty values to ensure the artifacts section remains in the same place
+				tempLine += ",,";
 			}
-			if (i < activeArtifactsSection.length) {
+			if (i < activeArtifactsSection.length) { // Assume there will always be less artifacts than common research items
 				const artifactLine = activeArtifactsSection[i];
 				if (artifactLine) {
 					tempLine += artifactLine;
