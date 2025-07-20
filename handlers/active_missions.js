@@ -29,8 +29,8 @@ async function handle(request, context) {
 
         const text = await response.text();
         const authRespMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
-        const lbresp = context.proto.GetActiveMissionsResponse.deserializeBinary(authRespMessage.message);
-        const string = JSON.stringify(lbresp.toObject());
+        const activeMissionsResp = context.proto.GetActiveMissionsResponse.deserializeBinary(authRespMessage.message);
+        const string = JSON.stringify(activeMissionsResp.toObject());
 
         return new Response(string);
     } catch (error) {

@@ -6,8 +6,8 @@ async function handle(request, context) {
 
 		const text = await response.text();
 		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
-		const lbresp = context.proto.ContractSeasonInfos.deserializeBinary(authMessage.message);
-		const string = JSON.stringify(lbresp.toObject());
+		const seasonInfoResp = context.proto.ContractSeasonInfos.deserializeBinary(authMessage.message);
+		const string = JSON.stringify(seasonInfoResp.toObject());
 
 		return new Response(string);
 	} catch (error) {

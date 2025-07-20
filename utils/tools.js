@@ -1,3 +1,5 @@
+const proto = require('../ei_pb');
+
 function bigNumberToString(number, decimals, strLen) {
     var letters = {
         0: '', 3: 'k', 6: 'M', 9: 'B', 12: 'T', 15: 'q', 18: 'Q', 21: 's',
@@ -42,50 +44,11 @@ function convertGrade(gradeId) {
 }
 
 function getEggName(num) {
-    switch (num) {
-        case 1: return "EDIBLE";
-        case 2: return "SUPERFOOD";
-        case 3: return "MEDICAL";
-        case 4: return "ROCKET_FUEL";
-        case 5: return "SUPER_MATERIAL";
-        case 6: return "FUSION";
-        case 7: return "QUANTUM";
-        case 8: return "IMMORTALITY";
-        case 9: return "TACHYON";
-        case 10: return "GRAVITON";
-        case 11: return "DILITHIUM";
-        case 12: return "PRODIGY";
-        case 13: return "TERRAFORM";
-        case 14: return "ANTIMATTER";
-        case 15: return "DARK_MATTER";
-        case 16: return "AI";
-        case 17: return "NEBULA";
-        case 18: return "UNIVERSE";
-        case 19: return "ENLIGHTENMENT";
-        case 100: return "CHOCOLATE";
-        case 101: return "EASTER";
-        case 102: return "WATERBALLOON";
-        case 103: return "FIREWORK";
-        case 104: return "PUMPKIN";
-        case 200: return "CUSTOM";
-        default: return "UNKNOWN";
-    }
+    return getProtoNameFromEnum(proto.Egg, num);
 }
 
 function getDimension(num) {
-    switch (num) {
-        case 0: return "INVALID";
-        case 1: return "EARNINGS";
-        case 2: return "AWAY_EARNINGS";
-        case 3: return "INTERNAL_HATCHERY_RATE";
-        case 4: return "EGG_LAYING_RATE";
-        case 5: return "SHIPPING_CAPACITY";
-        case 6: return "HAB_CAPACITY";
-        case 7: return "VEHICLE_COST";
-        case 8: return "HAB_COST";
-        case 9: return "RESEARCH_COST";
-        default: return "UNKNOWN";
-    }
+    return getProtoNameFromEnum(proto.GameModifier.GameDimension, num);
 }
 
 function getBuffLevel(maxFarmReached) {
@@ -94,6 +57,26 @@ function getBuffLevel(maxFarmReached) {
     if (maxFarmReached >= 100000000) return 2;
     if (maxFarmReached >= 10000000) return 1;
     return NaN; // return NaN if no level has been reached
+}
+
+function getArtifactLevel(num) {
+    return getProtoNameFromEnum(proto.ArtifactSpec.Level, num);
+}
+
+/**
+ * Helper function
+ */
+function getProtoNameFromEnum(protoObject, enumValue) {
+    return Object.keys(protoObject).find(key => protoObject[key] === enumValue) || "UNKNOWN";
+}
+
+
+function getArtifactRarity(num) {
+    return getProtoNameFromEnum(proto.ArtifactSpec.Rarity, num);
+}
+
+function getArtifactName(num) {
+    return getProtoNameFromEnum(proto.ArtifactSpec.Name, num);
 }
 
 async function createAuthHash(message, env) {
@@ -110,4 +93,14 @@ async function createAuthHash(message, env) {
     return hashHex;
 }
 
-module.exports = { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel, createAuthHash };
+module.exports = {
+	bigNumberToString,
+	convertGrade,
+	getEggName,
+	getDimension,
+	getBuffLevel,
+	createAuthHash,
+    getArtifactLevel,
+    getArtifactRarity,
+    getArtifactName
+};

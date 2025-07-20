@@ -1,4 +1,13 @@
-const { bigNumberToString, convertGrade, getEggName, getDimension, getBuffLevel } = require("../utils/tools");
+const {
+	bigNumberToString,
+	convertGrade,
+	getEggName,
+	getDimension,
+	getBuffLevel,
+	getArtifactName,
+	getArtifactRarity,
+	getArtifactLevel
+} = require("../utils/tools");
 const { handle: handleBackup } = require("./backup");
 const { handle: handlePeriodicals } = require('./periodicals');
 
@@ -69,6 +78,47 @@ async function handle(request, context) {
 		backup.farmsList.forEach(farm => {
 			csv += bigNumberToString(farm.cashEarned - farm.cashSpent, 3) + ",";
 		})
+
+		// Not a very neat implementation (compared to Tiller's work in this file), but it works ;)
+		// This is also here because Yon didn't want it added on the bottom, but rather to the side of exsisting data
+		const activeArtifactsSection = ["Farm,ArtifactType,ArtifactRarity,ArtifactTier,Stone1,Stone2,Stone3,"];
+
+		for (const farm of backup.farmsList) {
+			let farmIndex = 0;
+			if (farm.contractId) {
+				farmIndex = backup.farmsList.findIndex(
+					(c) => c.contractId === farm.contractId
+				);
+			} else {
+				farmIndex = backup.farmsList.findIndex((c) => c.farmType === 2);
+			}
+
+			const mappedArtis = (
+				backup.artifactsDb.activeArtifactSetsList[farmIndex]?.slotsList ?? []
+			).map((slot) => {
+				return backup.artifactsDb.inventoryItemsList.find(
+					(i) => i.itemId === slot.itemId
+				);
+			});
+
+			const farmName = farm.contractId ? farm.contractId : "Home";
+
+			for (let artifact of mappedArtis) {
+				if (!artifact) continue; // For empty slots (no artifact(s) equipped)
+				artifact = artifact.artifact;
+				const artifactName = getArtifactName(artifact.spec.name);
+				const artifactRarity = getArtifactRarity(artifact.spec.rarity);
+				const artifactLevel = getArtifactLevel(artifact.spec.level);
+				let stones = "";
+				for (const stone of artifact.stonesList) {
+					const stoneName = getArtifactName(stone.name);
+					const stoneLevel = parseInt(stone.level) + 2;
+					stones += stoneName + "_" + stoneLevel + ",";
+				}
+				activeArtifactsSection.push(`${farmName},${artifactName},${artifactRarity},${artifactLevel},` + stones + "\n");
+			}
+		}
+	
 		csv = csv.slice(0, -1) + "\n";
 		for (let i = 0; i < backup.farmsList[0].commonResearchList.length; i++) {
 			let tempLine = "";
@@ -76,14 +126,24 @@ async function handle(request, context) {
 			for (let j = 0; j < backup.farmsList.length; j++) {
 				tempLine += backup.farmsList[j].commonResearchList[i].level + ",";
 			}
-			if (i < boostIds.length) {
-				const commaCount = (tempLine.match(/,/g) || []).length; 
-				if (commaCount < 10) {
-					tempLine = tempLine.padEnd(tempLine.length + (10 - commaCount), ",");
-				}
+			const commaCount = (tempLine.match(/,/g) || []).length; 
+			// Pad to ensure boosts and artifacts sections are in the same place always (horizontally at least)
+			if (commaCount < 10) {
+				tempLine = tempLine.padEnd(tempLine.length + (10 - commaCount), ",");
+			}
+			if (i < boostIds.length) { // Assume there will always be less boosts than common research items
 				tempLine += boostIds[i] + ","
 				const boost = backup.game.boostsList.find(boost => boost.boostId === boostIds[i]);
 				tempLine += (boost ? boost.count : "0") + ",";
+			} else {
+				// If we are out of boosts to add, add empty values to ensure the artifacts section remains in the same place
+				tempLine += ",,";
+			}
+			if (i < activeArtifactsSection.length) { // Assume there will always be less artifacts than common research items
+				const artifactLine = activeArtifactsSection[i];
+				if (artifactLine) {
+					tempLine += artifactLine;
+				}
 			}
 			tempLine = tempLine.slice(0, -1) + "\n";
 			csv += tempLine

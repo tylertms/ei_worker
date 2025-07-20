@@ -23,8 +23,8 @@ async function handle(request, context) {
 
 		const text = await response.text();
 		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject().message;
-		const fcresp = context.proto.ArtifactsConfigurationResponse.deserializeBinary(authMessage);
-		const string = JSON.stringify(fcresp.toObject());
+		const artiConfigResp = context.proto.ArtifactsConfigurationResponse.deserializeBinary(authMessage);
+		const string = JSON.stringify(artiConfigResp.toObject());
 
 		return new Response(string);
 	} catch (error) {

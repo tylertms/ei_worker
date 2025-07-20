@@ -8,9 +8,9 @@ async function handle(request, context) {
 
 		const text = await response.text();
 		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject().message;
-		const lbresp = context.proto.UserSubscriptionInfo.deserializeBinary(authMessage);
+		const subStatusResp = context.proto.UserSubscriptionInfo.deserializeBinary(authMessage);
 
-		const string = JSON.stringify(lbresp.toObject());
+		const string = JSON.stringify(subStatusResp.toObject());
 
 		return new Response(string);
 	} catch (error) {
