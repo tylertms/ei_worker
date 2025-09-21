@@ -31,7 +31,6 @@ async function handle(request, context) {
         });
 
         const text = await response.text();
-        console.log(text);
         const authRespMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
         const activeMissionsResp = context.proto.GetActiveMissionsResponse.deserializeBinary(authRespMessage.message);
         const string = JSON.stringify(activeMissionsResp.toObject());
