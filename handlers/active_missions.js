@@ -8,8 +8,11 @@ async function handle(request, context) {
         const bri = new context.proto.BasicRequestInfo()
             .setEiUserId(EID)
             .setClientVersion(99);
+        
+        const getActiveMissionsReq = new context.proto.GetActiveMissionsRequest()
+            .setRinfo(bri);
 
-        const rawMessage = bri.serializeBinary();
+        const rawMessage = getActiveMissionsReq.serializeBinary();
 
 		const code = await createAuthHash(rawMessage, context.env);
 
@@ -22,7 +25,7 @@ async function handle(request, context) {
         const params = new URLSearchParams();
         params.append('data', b64encoded);
 
-        const response = await fetch(context.baseURL + "/ei_afx/get_active_missions", {
+        const response = await fetch(context.baseURL + "/ei_afx/get_active_missions_v2", {
             method: "POST",
             body: params
         });
