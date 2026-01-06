@@ -2,33 +2,44 @@ import { Buffer } from "node:buffer";
 const { createAuthHash } = require("../utils/tools");
 
 async function handle(request, context) {
-	const EID = new URL(request.url).searchParams.get("EID");
+	const params = new URL(request.url).searchParams;
+	const EID = params.get("EID");
+	const resetIndex = params.get("resetIndex");
 
 	try {
 		const bri = new context.proto.BasicRequestInfo()
 			.setEiUserId(EID)
 			.setClientVersion(99);
 
-		const fcr = new context.proto.EggIncFirstContactRequest()
-			.setRinfo(bri)
-			.setEiUserId(EID);
+		let resetCount;
 
-		const fcrEncoded = Buffer.from(
-			context.decoder.decode(fcr.serializeBinary()),
-		).toString("base64");
+		if (resetIndex) {
+			resetCount = parseInt(resetIndex);
+		} else {
+			const fcr = new context.proto.EggIncFirstContactRequest()
+				.setRinfo(bri)
+				.setEiUserId(EID);
 
-		const fcrParams = new URLSearchParams();
-		fcrParams.append("data", fcrEncoded);
+			const fcrEncoded = Buffer.from(
+				context.decoder.decode(fcr.serializeBinary()),
+			).toString("base64");
 
-		const fcrResponse = await fetch(context.baseURL + "/ei/bot_first_contact", {
-			method: "POST",
-			body: fcrParams,
-		});
+			const fcrParams = new URLSearchParams();
+			fcrParams.append("data", fcrEncoded);
 
-		const fcrText = await fcrResponse.text();
-		const fcrResp =
-			context.proto.EggIncFirstContactResponse.deserializeBinary(fcrText);
-		const resetCount = fcrResp.getBackup().getVirtue().getResets();
+			const fcrResponse = await fetch(
+				context.baseURL + "/ei/bot_first_contact",
+				{
+					method: "POST",
+					body: fcrParams,
+				},
+			);
+
+			const fcrText = await fcrResponse.text();
+			const fcrResp =
+				context.proto.EggIncFirstContactResponse.deserializeBinary(fcrText);
+			resetCount = fcrResp.getBackup().getVirtue().getResets();
+		}
 
 		const getActiveMissionsReq = new context.proto.GetActiveMissionsRequest()
 			.setRinfo(bri)
@@ -37,9 +48,7 @@ async function handle(request, context) {
 		console.log(getActiveMissionsReq.toObject());
 
 		const rawMessage = getActiveMissionsReq.serializeBinary();
-
 		const code = await createAuthHash(rawMessage, context.env);
-
 		const authReqMessage = new context.proto.AuthenticatedMessage()
 			.setMessage(rawMessage)
 			.setCode(code);
