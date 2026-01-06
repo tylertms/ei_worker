@@ -38,7 +38,9 @@ async function handle(request, context) {
 			const fcrText = await fcrResponse.text();
 			const fcrResp =
 				context.proto.EggIncFirstContactResponse.deserializeBinary(fcrText);
-			resetCount = fcrResp.getBackup().getVirtue().getResets();
+			if (fcrResp.hasBackup() && fcrResp.getBackup().hasVirtue()) {
+				resetCount = fcrResp.getBackup().getVirtue().getResets();
+			}
 		}
 
 		const getActiveMissionsReq = new context.proto.GetActiveMissionsRequest()
