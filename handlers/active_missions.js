@@ -20,9 +20,7 @@ async function handle(request, context) {
 				.setRinfo(bri)
 				.setEiUserId(EID);
 
-			const fcrEncoded = Buffer.from(
-				context.decoder.decode(fcr.serializeBinary()),
-			).toString("base64");
+			const fcrEncoded = Buffer.from(fcr.serializeBinary()).toString("base64");
 
 			const fcrParams = new URLSearchParams();
 			fcrParams.append("data", fcrEncoded);
@@ -53,9 +51,7 @@ async function handle(request, context) {
 			.setMessage(rawMessage)
 			.setCode(code);
 
-		const b64encoded = Buffer.from(
-			context.decoder.decode(authReqMessage.serializeBinary()),
-		).toString("base64");
+		const b64encoded = Buffer.from(authReqMessage.serializeBinary()).toString("base64");
 
 		const params = new URLSearchParams();
 		params.append("data", b64encoded);

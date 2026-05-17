@@ -12,7 +12,7 @@ async function handle(request, context) {
 		const acr = new context.proto.ArtifactsConfigurationRequest()
 			.setRinfo(bri);
 
-		const b64encoded = Buffer.from(context.decoder.decode(acr.serializeBinary())).toString('base64');
+		const b64encoded = Buffer.from(acr.serializeBinary()).toString('base64');
 
 		const params = new URLSearchParams();
 		params.append('data', b64encoded);

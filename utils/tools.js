@@ -102,23 +102,8 @@ async function decompressMessage(authMsg) {
         const writer = ds.writable.getWriter();
         writer.write(messageBytes);
         writer.close();
-
-        const chunks = [];
-        const reader = ds.readable.getReader();
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-        }
-
-        const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
-        const result = new Uint8Array(totalLength);
-        let offset = 0;
-        for (const chunk of chunks) {
-            result.set(chunk, offset);
-            offset += chunk.length;
-        }
-        return result;
+        const buffer = await new Response(ds.readable).arrayBuffer();
+        return new Uint8Array(buffer);
     } catch {
         return messageBytes;
     }

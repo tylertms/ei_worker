@@ -9,7 +9,7 @@ async function handle(request, context) {
             .setEiUserId(EID)
             .setClientVersion(99);
 
-        const b64encoded = Buffer.from(context.decoder.decode(bri.serializeBinary())).toString('base64');
+        const b64encoded = Buffer.from(bri.serializeBinary()).toString('base64');
 
         const params = new URLSearchParams();
         params.append('data', b64encoded);
@@ -22,10 +22,7 @@ async function handle(request, context) {
         const text = await response.text();
         const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
         const archive = context.proto.ContractsArchive.deserializeBinary(authMessage);
-        const string = JSON.stringify(archive.toObject());
-        
-        // Extract and parse the archiveList
-        const archiveList = JSON.parse(string).archiveList;
+        const archiveList = archive.toObject().archiveList;
 
         // Initialize variables to track max and min cxpChange
         let maxcxpChange = -Infinity;

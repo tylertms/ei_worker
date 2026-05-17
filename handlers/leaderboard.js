@@ -25,7 +25,7 @@ async function handle(request, context) {
             .setMessage(rawMessage)
             .setCode(code);
 
-        const b64encoded = Buffer.from(context.decoder.decode(authReqMessage.serializeBinary())).toString('base64');
+        const b64encoded = Buffer.from(authReqMessage.serializeBinary()).toString('base64');
 
         const params = new URLSearchParams();
         params.append('data', b64encoded);

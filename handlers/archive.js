@@ -9,7 +9,7 @@ async function handle(request, context) {
 			.setEiUserId(EID)
 			.setClientVersion(99);
 
-		const b64encoded = Buffer.from(context.decoder.decode(bri.serializeBinary())).toString('base64');
+		const b64encoded = Buffer.from(bri.serializeBinary()).toString('base64');
 
 		const params = new URLSearchParams();
 		params.append('data', b64encoded);

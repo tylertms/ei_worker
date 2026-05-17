@@ -19,7 +19,7 @@ async function handle(request, context) {
             .setInfo(missionInfo)
             .setEiUserId(EID);
 
-        const b64encoded = Buffer.from(context.decoder.decode(missionRequest.serializeBinary())).toString('base64');
+        const b64encoded = Buffer.from(missionRequest.serializeBinary()).toString('base64');
         
         const params = new URLSearchParams();
         params.append('data', b64encoded);
