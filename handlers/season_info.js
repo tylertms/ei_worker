@@ -1,3 +1,5 @@
+const { decompressMessage } = require("../utils/tools");
+
 async function handle(request, context) {
 	try {
 		const response = await fetch(context.baseURL + "/ei_ctx/get_season_infos_v2", {
@@ -5,8 +7,8 @@ async function handle(request, context) {
 		});
 
 		const text = await response.text();
-		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
-		const seasonInfoResp = context.proto.ContractSeasonInfos.deserializeBinary(authMessage.message);
+		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
+		const seasonInfoResp = context.proto.ContractSeasonInfos.deserializeBinary(authMessage);
 		const string = JSON.stringify(seasonInfoResp.toObject());
 
 		return new Response(string);

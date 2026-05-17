@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer';
-const { createAuthHash } = require("../utils/tools");
+const { createAuthHash, decompressMessage } = require("../utils/tools");
 
 async function handle(request, context) {
     const searchParams = new URL(request.url).searchParams;
@@ -36,8 +36,8 @@ async function handle(request, context) {
         });
 
         const text = await response.text();
-        const authRespMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
-        const lbresp = context.proto.LeaderboardResponse.deserializeBinary(authRespMessage.message);
+        const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
+        const lbresp = context.proto.LeaderboardResponse.deserializeBinary(authMessage);
 
         return new Response(JSON.stringify(lbresp.toObject()));
     } catch (error) {

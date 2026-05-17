@@ -1,4 +1,5 @@
 import { Buffer } from 'node:buffer';
+const { decompressMessage } = require("../utils/tools");
 
 async function handle(request, context) {
     const searchParams = new URL(request.url).searchParams;
@@ -30,9 +31,8 @@ async function handle(request, context) {
         });
 
         const text = await response.text();
-        
-        const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
-        const compMissResp = context.proto.CompleteMissionResponse.deserializeBinary(authMessage.message);
+        const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
+        const compMissResp = context.proto.CompleteMissionResponse.deserializeBinary(authMessage);
         const string = JSON.stringify(compMissResp.toObject());
 
         return new Response(string);

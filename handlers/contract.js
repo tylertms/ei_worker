@@ -1,4 +1,5 @@
 import { Buffer } from 'node:buffer';
+const { decompressMessage } = require("../utils/tools");
 
 async function handle(request, context) {
 	const reqParams = new URL(request.url).searchParams
@@ -28,7 +29,7 @@ async function handle(request, context) {
 		});
 
 		const text = await response.text();
-		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject().message;
+		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
 		const contractInfo = context.proto.ContractCoopStatusResponse.deserializeBinary(authMessage);
 		const string = JSON.stringify(contractInfo.toObject());
 

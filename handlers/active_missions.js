@@ -1,5 +1,5 @@
 import { Buffer } from "node:buffer";
-const { createAuthHash } = require("../utils/tools");
+const { createAuthHash, decompressMessage } = require("../utils/tools");
 
 async function handle(request, context) {
 	const params = new URL(request.url).searchParams;
@@ -47,8 +47,6 @@ async function handle(request, context) {
 			.setRinfo(bri)
 			.setResetIndex(resetCount);
 
-		console.log(getActiveMissionsReq.toObject());
-
 		const rawMessage = getActiveMissionsReq.serializeBinary();
 		const code = await createAuthHash(rawMessage, context.env);
 		const authReqMessage = new context.proto.AuthenticatedMessage()
@@ -71,12 +69,9 @@ async function handle(request, context) {
 		);
 
 		const text = await response.text();
-		const authRespMessage =
-			context.proto.AuthenticatedMessage.deserializeBinary(text).toObject();
+		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
 		const activeMissionsResp =
-			context.proto.GetActiveMissionsResponse.deserializeBinary(
-				authRespMessage.message,
-			);
+			context.proto.GetActiveMissionsResponse.deserializeBinary(authMessage);
 		const string = JSON.stringify(activeMissionsResp.toObject());
 
 		return new Response(string);

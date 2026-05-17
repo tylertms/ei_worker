@@ -1,4 +1,5 @@
 import { Buffer } from 'node:buffer';
+const { decompressMessage } = require("../utils/tools");
 
 async function handle(request, context) {
 	const EID = new URL(request.url).searchParams.get('EID');
@@ -19,7 +20,7 @@ async function handle(request, context) {
 		});
 
 		const text = await response.text();
-		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject().message;
+		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
 		const archive = context.proto.ContractsArchive.deserializeBinary(authMessage);
 		const string = JSON.stringify(archive.toObject());
 

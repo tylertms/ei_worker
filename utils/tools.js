@@ -93,6 +93,37 @@ async function createAuthHash(message, env) {
     return hashHex;
 }
 
+async function decompressMessage(authMsg) {
+    const messageBytes = authMsg.getMessage_asU8();
+    if (!authMsg.getCompressed()) return messageBytes;
+
+    try {
+        const ds = new DecompressionStream("deflate");
+        const writer = ds.writable.getWriter();
+        writer.write(messageBytes);
+        writer.close();
+
+        const chunks = [];
+        const reader = ds.readable.getReader();
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+        }
+
+        const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+        const result = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const chunk of chunks) {
+            result.set(chunk, offset);
+            offset += chunk.length;
+        }
+        return result;
+    } catch {
+        return messageBytes;
+    }
+}
+
 module.exports = {
 	bigNumberToString,
 	convertGrade,
@@ -102,5 +133,6 @@ module.exports = {
 	createAuthHash,
     getArtifactLevel,
     getArtifactRarity,
-    getArtifactName
+    getArtifactName,
+    decompressMessage,
 };
