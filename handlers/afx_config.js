@@ -1,4 +1,5 @@
 import { Buffer } from 'node:buffer';
+const { decompressMessage } = require("../utils/tools");
 
 async function handle(request, context) {
 	const EID = new URL(request.url).searchParams.get('EID');
@@ -11,7 +12,7 @@ async function handle(request, context) {
 		const acr = new context.proto.ArtifactsConfigurationRequest()
 			.setRinfo(bri);
 
-		const b64encoded = Buffer.from(context.decoder.decode(acr.serializeBinary())).toString('base64');
+		const b64encoded = Buffer.from(acr.serializeBinary()).toString('base64');
 
 		const params = new URLSearchParams();
 		params.append('data', b64encoded);
@@ -22,7 +23,7 @@ async function handle(request, context) {
 		});
 
 		const text = await response.text();
-		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject().message;
+		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
 		const artiConfigResp = context.proto.ArtifactsConfigurationResponse.deserializeBinary(authMessage);
 		const string = JSON.stringify(artiConfigResp.toObject());
 

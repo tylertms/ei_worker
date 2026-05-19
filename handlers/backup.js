@@ -13,7 +13,7 @@ async function handle(request, context) {
 			.setRinfo(bri)
 			.setEiUserId(EID);
 
-		const b64encoded = Buffer.from(context.decoder.decode(fcr.serializeBinary())).toString('base64');
+		const b64encoded = Buffer.from(fcr.serializeBinary()).toString('base64');
 
 		const params = new URLSearchParams();
 		params.append('data', b64encoded);

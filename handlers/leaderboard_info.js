@@ -1,3 +1,5 @@
+const { decompressMessage } = require("../utils/tools");
+
 async function handle(request, context) {
 	try {
 		const response = await fetch(context.baseURL + "/ei_ctx/get_leaderboard_info", {
@@ -5,7 +7,7 @@ async function handle(request, context) {
 		});
 
 		const text = await response.text();
-		const authMessage = context.proto.AuthenticatedMessage.deserializeBinary(text).toObject().message;
+		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
 		const lbInfoResp = context.proto.LeaderboardInfo.deserializeBinary(authMessage);
 
 		const string = JSON.stringify(lbInfoResp.toObject());
