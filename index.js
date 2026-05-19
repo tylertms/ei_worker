@@ -1,5 +1,4 @@
 const proto = require('./ei_pb');
-const decoder = new TextDecoder('utf-8');
 const baseURL = "https://ctx-dot-auxbrainhome.appspot.com"
 
 //This must be updated since cloudflare workers can't read directories or do dynamic imports
@@ -29,7 +28,7 @@ async function handleRequest(request, env) {
 		if (handler === undefined) {
 			return new Response("Error: Endpoint \"" + path + "\" not found.", { status: 404 });
 		}
-		const response = await handlers[path].handle(request, { proto, baseURL, decoder, env });
+		const response = await handlers[path].handle(request, { proto, baseURL, env });
 
 		return new Response(response.body, {
       ...response, // Preserve the existing response options
