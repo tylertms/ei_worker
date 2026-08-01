@@ -1,6 +1,6 @@
 # ei_worker
 
-ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests and JSON. The checked-in protobuf bindings target backup version 73.
+ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests and JSON.
 
 Base URL: `https://ei_worker.tylertms.workers.dev`
 
