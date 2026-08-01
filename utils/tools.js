@@ -38,8 +38,8 @@ const suffixes = {
 
 function big_number_to_string(number, decimals, string_length) {
 	if (Number.isNaN(number)) return "NaN";
-	if (!Number.isFinite(number)) return "Inf";
 	if (number < 0) return `-${big_number_to_string(-number, decimals, string_length)}`;
+	if (!Number.isFinite(number)) return "Inf";
 	if (number === 0) return "0";
 
 	const length = string_length ?? 3;
@@ -64,7 +64,7 @@ function big_number_to_string(number, decimals, string_length) {
 
 function convert_grade(grade_id) {
 	const grades = { 0: "UNKNOWN", 1: "C", 2: "B", 3: "A", 4: "AA", 5: "AAA", 6: "ANY" };
-	return grades[grade_id ?? 0];
+	return grades[grade_id ?? 0] ?? "UNKNOWN";
 }
 
 function get_proto_name_from_enum(proto_object, enum_value) {

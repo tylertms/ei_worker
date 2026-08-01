@@ -71,7 +71,8 @@ function get_artifact_rows(backup, farm_records) {
 			const artifact = inventory_item.artifact;
 			if (!artifact?.spec) continue;
 			const stones = (artifact.stonesList ?? []).slice(0, 3).map((stone) => {
-				const level = Number.parseInt(stone.level, 10) + 2;
+				const parsed_level = Number.parseInt(stone.level, 10);
+				const level = Number.isNaN(parsed_level) ? "UNKNOWN" : parsed_level + 2;
 				return `${get_artifact_name(stone.name)}_${level}`;
 			});
 			rows.push([

@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { create_auth_hash, decompress_message, get_buff_level } from "../utils/tools.js";
+import {
+	big_number_to_string,
+	convert_grade,
+	create_auth_hash,
+	decompress_message,
+	get_buff_level,
+} from "../utils/tools.js";
 
 async function compress(bytes) {
 	const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream("deflate"));
@@ -74,4 +80,10 @@ test("validates authenticated request configuration", async () => {
 		create_auth_hash(new Uint8Array(), { INDEX: 0, MAGIC: "secret", MARKER: 42 }),
 		(error) => error.code === "invalid_auth_message",
 	);
+});
+
+test("formats unknown and infinite report values safely", () => {
+	assert.equal(big_number_to_string(Number.POSITIVE_INFINITY, 3), "Inf");
+	assert.equal(big_number_to_string(Number.NEGATIVE_INFINITY, 3), "-Inf");
+	assert.equal(convert_grade(999), "UNKNOWN");
 });

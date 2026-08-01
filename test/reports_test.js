@@ -14,7 +14,18 @@ test("escapes CSV syntax and spreadsheet formulas", () => {
 
 test("builds a stable farm report from minimal backup data", () => {
 	const backup = {
-		artifactsDb: { activeArtifactSetsList: [{ slotsList: [] }], inventoryItemsList: [] },
+		artifactsDb: {
+			activeArtifactSetsList: [{ slotsList: [{ itemId: 1 }] }],
+			inventoryItemsList: [
+				{
+					artifact: {
+						spec: { level: 0, name: 0, rarity: 0 },
+						stonesList: [{ level: "invalid", name: 0 }],
+					},
+					itemId: 1,
+				},
+			],
+		},
 		contracts: {
 			archiveList: [],
 			colleggtibleMaxFarmSizeReachedList: [],
