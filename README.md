@@ -4,19 +4,6 @@ ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests a
 
 Base URL: `https://ei_worker.tylertms.workers.dev`
 
-## Public API policy
-
-- Requests are public and require no Worker-level authentication.
-- There is no rate limiting.
-- Every endpoint accepts `GET` and `OPTIONS` only.
-- CORS allows every origin with `Access-Control-Allow-Origin: *`.
-- Account-specific responses use `Cache-Control: no-store`.
-- `leaderboard_info` and `season_info` are public metadata cached for five minutes.
-- Unknown, missing, conflicting, and out-of-range parameters return a structured `400` response.
-- Upstream Egg, Inc. failures return `502` or `504` instead of being reported as successful responses.
-
-Successful JSON responses use the field names produced by the official protobuf JavaScript generator. Those response fields remain camelCase because they are part of the generated protobuf interface. Worker paths, request parameters, filenames, and handwritten identifiers use snake_case.
-
 ## Endpoints
 
 | Endpoint             | Parameters                    | Response                                                        |
@@ -47,21 +34,6 @@ Examples:
 /leaderboard?eid=EI1234567890123456&scope=1&grade=5
 /active_missions?eid=EI1234567890123456&reset_index=12
 ```
-
-`scope` accepts `0` for all time or `1` for the current season. `grade` accepts `0` through `5`, where `1` is C and `5` is AAA.
-
-## Compatibility aliases
-
-Legacy names still work. Alias responses include `Deprecation: true` and a `Link` header pointing to the canonical URL.
-
-| Legacy name                  | Canonical name       |
-| ---------------------------- | -------------------- |
-| `/activeArtifacts`           | `/active_artifacts`  |
-| `/minmaxCxPChange`           | `/minmax_cxp_change` |
-| `/yonFarmInfo`               | `/yon_farm_info`     |
-| `EID`                        | `eid`                |
-| `resetIndex`                 | `reset_index`        |
-| `id` on `/completed_mission` | `mission_id`         |
 
 ## Errors
 
