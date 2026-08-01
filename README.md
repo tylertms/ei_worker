@@ -24,7 +24,6 @@ ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests a
 | `/farms`             | `eid`                         | Structured home and contract farm details                       |
 | `/leaderboard`       | `eid`, `scope`, `grade`       | Leaderboard data                                                |
 | `/leaderboard_info`  | None                          | Leaderboard metadata                                            |
-| `/minmax_cxp_change` | `eid`                         | Highest and lowest contract XP change as text                   |
 | `/missions`          | `eid`                         | Fueling, active, returned, and archived artifact missions       |
 | `/periodicals`       | `eid`                         | Current contracts and events                                    |
 | `/player_summary`    | `eid`                         | Compact player, farm, contract, artifact, and subscription data |

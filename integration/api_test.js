@@ -175,17 +175,6 @@ test("retrieves a live player summary", { timeout }, async () => {
 	assert.equal(typeof summary.farms.total, "number");
 });
 
-test("retrieves live contract XP extremes", { timeout }, async () => {
-	const response = await get_live_response("minmax_cxp_change", { eid: test_eid });
-	if (response.status === 404) {
-		assert.equal((await response.json()).error.code, "no_evaluations");
-		return;
-	}
-	assert.equal(response.status, 200);
-	assert.match(response.headers.get("Content-Type") ?? "", /^text\/plain/);
-	assert.match(await response.text(), /^Highest cxpChange:/);
-});
-
 test("retrieves a live coop status", { timeout }, async () => {
 	const active_coop = find_active_coop(await get_backup());
 	const contract = await get_json("contract", {

@@ -144,11 +144,6 @@ const cases = [
 		path: "leaderboard_info",
 	},
 	{
-		content_type: "text/plain",
-		fetch: fixed_response(authenticated_payload(archive)),
-		path: "minmax_cxp_change?eid=EI123",
-	},
-	{
 		content_type: "application/json",
 		fetch: async (input) =>
 			new Response(

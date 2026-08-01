@@ -14,7 +14,6 @@ import { handle as events } from "../handlers/events.js";
 import { handle as farms } from "../handlers/farms.js";
 import { handle as leaderboard } from "../handlers/leaderboard.js";
 import { handle as leaderboard_info } from "../handlers/leaderboard_info.js";
-import { handle as minmax_cxp_change } from "../handlers/minmax_cxp_change.js";
 import { handle as missions } from "../handlers/missions.js";
 import { handle as periodicals } from "../handlers/periodicals.js";
 import { handle as player_summary } from "../handlers/player_summary.js";
@@ -24,7 +23,6 @@ import { handle as yon_farm_info } from "../handlers/yon_farm_info.js";
 
 const json_content_type = "application/json; charset=utf-8";
 const csv_content_type = "text/csv; charset=utf-8";
-const text_content_type = "text/plain; charset=utf-8";
 
 const endpoints = {
 	active_artifacts: {
@@ -69,7 +67,6 @@ const endpoints = {
 		type: json_content_type,
 	},
 	leaderboard_info: { cache_seconds: 300, handle: leaderboard_info, type: json_content_type },
-	minmax_cxp_change: { handle: minmax_cxp_change, params: ["eid"], type: text_content_type },
 	missions: { handle: missions, params: ["eid"], type: json_content_type },
 	periodicals: { handle: periodicals, params: ["eid"], type: json_content_type },
 	player_summary: { handle: player_summary, params: ["eid"], type: json_content_type },
@@ -80,7 +77,6 @@ const endpoints = {
 
 const endpoint_aliases = {
 	activeArtifacts: "active_artifacts",
-	minmaxCxPChange: "minmax_cxp_change",
 	yonFarmInfo: "yon_farm_info",
 };
 

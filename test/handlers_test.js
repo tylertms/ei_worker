@@ -8,7 +8,6 @@ import { calculate_buffs } from "../handlers/coop_buffs.js";
 import { build_coop_summary } from "../handlers/coop_summary.js";
 import { build_events } from "../handlers/events.js";
 import { build_farms } from "../handlers/farms.js";
-import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
 import { build_missions } from "../handlers/missions.js";
 import { build_player_summary } from "../handlers/player_summary.js";
 import { find_farm_index, get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
@@ -258,22 +257,6 @@ test("builds colleggtible progress from all availability sources", () => {
 			remaining_to_next_threshold: 9_000_000_000,
 		},
 	]);
-});
-
-test("ignores incomplete contract XP evaluations", () => {
-	const archive = [
-		{},
-		{ contract: { identifier: "missing_evaluation" } },
-		{ contract: { identifier: "low" }, evaluation: { cxpChange: -5 } },
-		{ contract: { identifier: "high" }, evaluation: { cxpChange: 10 } },
-		{ contract: { identifier: "invalid" }, evaluation: { cxpChange: Number.NaN } },
-	];
-
-	assert.deepEqual(get_cxp_extremes(archive), {
-		maximum: { contract: "high", value: 10 },
-		minimum: { contract: "low", value: -5 },
-	});
-	assert.equal(get_cxp_extremes([{}]), undefined);
 });
 
 test("merges and summarizes contract evaluations", () => {

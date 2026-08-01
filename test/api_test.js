@@ -87,33 +87,29 @@ test("maps legacy parameter names and advertises the canonical URL", async () =>
 });
 
 test("maps legacy endpoint names", async () => {
-	const local_contract = new proto.LocalContract()
-		.setContract(new proto.Contract().setIdentifier("test_contract"))
-		.setEvaluation(new proto.ContractEvaluation().setCxpChange(1));
-	const archive = new proto.ContractsArchive();
-	archive.addArchive(local_contract);
-	const authenticated = new proto.AuthenticatedMessage().setMessage(archive.serializeBinary());
-	const payload = buffer.from(authenticated.serializeBinary()).toString("base64");
+	const backup = new proto.Backup();
+	backup.addFarms(new proto.Backup.Simulation().setFarmType(2));
+	const first_contact = new proto.EggIncFirstContactResponse().setBackup(backup);
+	const payload = buffer.from(first_contact.serializeBinary()).toString("base64");
 	const response = await with_fetch(payload, () =>
-		handle_request(new Request("https://worker.example/minmaxCxPChange?EID=EI123")),
+		handle_request(new Request("https://worker.example/activeArtifacts?EID=EI123")),
 	);
 
 	assert.equal(response.status, 200);
 	assert.equal(response.headers.get("Deprecation"), "true");
-	assert.match(response.headers.get("Link"), /\/minmax_cxp_change\?eid=EI123/);
+	assert.match(response.headers.get("Link"), /\/active_artifacts\?eid=EI123/);
 });
 
 test("advertises canonical aliases on endpoint errors", async () => {
-	const archive = new proto.ContractsArchive();
-	const authenticated = new proto.AuthenticatedMessage().setMessage(archive.serializeBinary());
-	const payload = buffer.from(authenticated.serializeBinary()).toString("base64");
+	const first_contact = new proto.EggIncFirstContactResponse().setBackup(new proto.Backup());
+	const payload = buffer.from(first_contact.serializeBinary()).toString("base64");
 	const response = await with_fetch(payload, () =>
-		handle_request(new Request("https://worker.example/minmaxCxPChange?EID=EI123")),
+		handle_request(new Request("https://worker.example/activeArtifacts?EID=EI123")),
 	);
 
 	assert.equal(response.status, 404);
 	assert.equal(response.headers.get("Deprecation"), "true");
-	assert.match(response.headers.get("Link"), /\/minmax_cxp_change\?eid=EI123/);
+	assert.match(response.headers.get("Link"), /\/active_artifacts\?eid=EI123/);
 });
 
 test("rejects missing, unknown, conflicting, and out-of-range parameters", async () => {
