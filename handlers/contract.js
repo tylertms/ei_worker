@@ -1,39 +1,18 @@
-import { Buffer } from 'node:buffer';
-import { decompressMessage } from "../utils/tools.js";
+import { basicRequest, postMessage } from "../egg-api.js";
 
-async function handle(request, context) {
-	const { contract, coop, eid: EID } = context.params;
-
-	try {
-		const bri = new context.proto.BasicRequestInfo()
-			.setEiUserId(EID)
-			.setClientVersion(99);
-
-		const ccsr = new context.proto.ContractCoopStatusRequest()
-			.setContractIdentifier(contract)
-			.setCoopIdentifier(coop)
-			.setUserId(EID)
-			.setRinfo(bri)
-
-		const b64encoded = Buffer.from(ccsr.serializeBinary()).toString('base64');
-
-		const params = new URLSearchParams();
-		params.append('data', b64encoded);
-
-		const response = await fetch(context.baseURL + "/ei/coop_status", {
-			method: "POST",
-			body: params
-		});
-
-		const text = await response.text();
-		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
-		const contractInfo = context.proto.ContractCoopStatusResponse.deserializeBinary(authMessage);
-		const string = JSON.stringify(contractInfo.toObject());
-
-		return new Response(string);
-	} catch (error) {
-		return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-	}
+async function getContract(context) {
+	const { contract, coop, eid } = context.params;
+	const request = new context.proto.ContractCoopStatusRequest()
+		.setContractIdentifier(contract)
+		.setCoopIdentifier(coop)
+		.setUserId(eid)
+		.setRinfo(basicRequest(context, eid));
+	return postMessage(context, "/ei/coop_status", request, context.proto.ContractCoopStatusResponse);
 }
 
-export { handle };
+async function handle(_request, context) {
+	const response = await getContract(context);
+	return new Response(JSON.stringify(response.toObject()));
+}
+
+export { getContract, handle };

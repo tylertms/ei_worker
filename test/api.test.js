@@ -20,11 +20,24 @@ test("preserves endpoint status and adds public headers", async () => {
 		handleRequest(new Request("https://worker.example/backup?eid=EI123")),
 	);
 
-	assert.equal(response.status, 500);
+	assert.equal(response.status, 502);
 	assert.equal(response.headers.get("Access-Control-Allow-Origin"), "*");
 	assert.equal(response.headers.get("Cache-Control"), "no-store");
 	assert.equal(response.headers.get("Content-Type"), "application/json; charset=utf-8");
 	assert.equal(response.headers.get("X-Content-Type-Options"), "nosniff");
+	assert.equal((await response.json()).error.code, "invalid_upstream_response");
+});
+
+test("translates upstream HTTP failures to a public gateway error", async () => {
+	const originalFetch = globalThis.fetch;
+	globalThis.fetch = async () => new Response(null, { status: 503 });
+	try {
+		const response = await handleRequest(new Request("https://worker.example/backup?eid=EI123"));
+		assert.equal(response.status, 502);
+		assert.equal((await response.json()).error.code, "upstream_error");
+	} finally {
+		globalThis.fetch = originalFetch;
+	}
 });
 
 test("handles preflight without calling the endpoint", async () => {

@@ -1,36 +1,8 @@
-import { Buffer } from 'node:buffer';
+import { getBackup } from "../egg-api.js";
 
-async function handle(request, context) {
-	const { eid: EID } = context.params;
-
-	try {
-
-		const bri = new context.proto.BasicRequestInfo()
-			.setEiUserId(EID)
-			.setClientVersion(99);
-
-		const fcr = new context.proto.EggIncFirstContactRequest()
-			.setRinfo(bri)
-			.setEiUserId(EID);
-
-		const b64encoded = Buffer.from(fcr.serializeBinary()).toString('base64');
-
-		const params = new URLSearchParams();
-		params.append('data', b64encoded);
-
-		const response = await fetch(context.baseURL + "/ei/bot_first_contact", {
-			method: "POST",
-			body: params
-		});
-
-		const text = await response.text();
-		const fcresp = context.proto.EggIncFirstContactResponse.deserializeBinary(text);
-		const string = JSON.stringify(fcresp.toObject().backup);
-
-		return new Response(string);
-	} catch (error) {
-		return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-	}
+async function handle(_request, context) {
+	const backup = await getBackup(context, context.params.eid);
+	return new Response(JSON.stringify(backup.toObject()));
 }
 
 export { handle };

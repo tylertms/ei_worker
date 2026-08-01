@@ -1,33 +1,16 @@
-import { Buffer } from 'node:buffer';
-import { decompressMessage } from "../utils/tools.js";
+import { clientVersion, postMessage } from "../egg-api.js";
 
-async function handle(request, context) {
-	const { eid: EID } = context.params;
-
-	try {
-		const pr = new context.proto.GetPeriodicalsRequest()
-			.setUserId(EID)
-			.setCurrentClientVersion(99);
-
-		const b64encoded = Buffer.from(pr.serializeBinary()).toString('base64');
-
-		const params = new URLSearchParams();
-		params.append('data', b64encoded);
-
-		const response = await fetch(context.baseURL + "/ei/get_periodicals", {
-			method: "POST",
-			body: params
-		});
-
-		const text = await response.text();
-		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
-		const periodicals = context.proto.PeriodicalsResponse.deserializeBinary(authMessage);
-		const string = JSON.stringify(periodicals.toObject());
-
-		return new Response(string);
-	} catch (error) {
-		return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-	}
+async function handle(_request, context) {
+	const request = new context.proto.GetPeriodicalsRequest()
+		.setUserId(context.params.eid)
+		.setCurrentClientVersion(clientVersion);
+	const response = await postMessage(
+		context,
+		"/ei/get_periodicals",
+		request,
+		context.proto.PeriodicalsResponse,
+	);
+	return new Response(JSON.stringify(response.toObject()));
 }
 
 export { handle };

@@ -79,6 +79,7 @@ class ApiError extends Error {
 		super(message);
 		this.status = status;
 		this.code = code;
+		this.expose = true;
 	}
 }
 
@@ -170,12 +171,12 @@ function addHeaders(response, type, successor) {
 }
 
 function errorResponse(error) {
-	if (!(error instanceof ApiError)) {
+	if (!error?.expose) {
 		console.error(error);
 	}
-	const status = error instanceof ApiError ? error.status : 500;
-	const code = error instanceof ApiError ? error.code : "internal_error";
-	const message = error instanceof ApiError ? error.message : "Internal server error";
+	const status = error?.expose ? error.status : 500;
+	const code = error?.expose ? error.code : "internal_error";
+	const message = error?.expose ? error.message : "Internal server error";
 	return new Response(JSON.stringify({ error: { code, message } }), {
 		headers: { "Content-Type": json },
 		status,

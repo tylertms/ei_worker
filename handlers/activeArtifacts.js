@@ -1,46 +1,14 @@
-import { Buffer } from 'node:buffer';
+import { getBackup } from "../egg-api.js";
 
-async function handle(request, context) {
-	const { contract, eid: EID } = context.params;
-
-	try {
-
-		const bri = new context.proto.BasicRequestInfo()
-			.setEiUserId(EID)
-			.setClientVersion(99);
-
-		const fcr = new context.proto.EggIncFirstContactRequest()
-			.setRinfo(bri)
-			.setEiUserId(EID);
-
-		const b64encoded = Buffer.from(fcr.serializeBinary()).toString('base64');
-
-		const params = new URLSearchParams();
-		params.append('data', b64encoded);
-
-		const response = await fetch(context.baseURL + "/ei/bot_first_contact", {
-			method: "POST",
-			body: params
-		});
-
-		const text = await response.text();
-		const fcresp = context.proto.EggIncFirstContactResponse.deserializeBinary(text);
-        const backup = fcresp.toObject().backup;
-        
-        var farmIndex = 0;
-        if (contract !== undefined) {
-            farmIndex = backup.farmsList.findIndex(c => c.contractId === contract);
-        } else {
-            farmIndex = backup.farmsList.findIndex(c => c.farmType === 2);
-        }
-
-        let mappedArtis = (backup.artifactsDb.activeArtifactSetsList[farmIndex]?.slotsList ?? []).map(slot => {
-            return backup.artifactsDb.inventoryItemsList.find(i => i.itemId === slot.itemId);
-        })
-        return new Response(JSON.stringify(mappedArtis));
-	} catch (error) {
-		return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-	}
+async function handle(_request, context) {
+	const backup = (await getBackup(context, context.params.eid)).toObject();
+	const farmIndex = context.params.contract
+		? backup.farmsList.findIndex((farm) => farm.contractId === context.params.contract)
+		: backup.farmsList.findIndex((farm) => farm.farmType === 2);
+	const artifacts = (backup.artifactsDb.activeArtifactSetsList[farmIndex]?.slotsList ?? []).map(
+		(slot) => backup.artifactsDb.inventoryItemsList.find((item) => item.itemId === slot.itemId),
+	);
+	return new Response(JSON.stringify(artifacts));
 }
 
 export { handle };

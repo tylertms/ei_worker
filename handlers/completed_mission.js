@@ -1,42 +1,19 @@
-import { Buffer } from 'node:buffer';
-import { decompressMessage } from "../utils/tools.js";
+import { basicRequest, postMessage } from "../egg-api.js";
 
-async function handle(request, context) {
-    const { eid: EID, mission_id: missionId } = context.params;
-
-    try {
-        const basicRequestInfo = new context.proto.BasicRequestInfo()
-            .setEiUserId(EID)
-            .setClientVersion(99);
-
-        const missionInfo = new context.proto.MissionInfo()
-            .setIdentifier(missionId);
-
-        const missionRequest = new context.proto.MissionRequest()
-            .setRinfo(basicRequestInfo)
-            .setInfo(missionInfo)
-            .setEiUserId(EID);
-
-        const b64encoded = Buffer.from(missionRequest.serializeBinary()).toString('base64');
-        
-        const params = new URLSearchParams();
-        params.append('data', b64encoded);
-        
-
-        const response = await fetch(context.baseURL + "/ei_afx/complete_mission", {
-            method: "POST",
-            body: params
-        });
-
-        const text = await response.text();
-        const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
-        const compMissResp = context.proto.CompleteMissionResponse.deserializeBinary(authMessage);
-        const string = JSON.stringify(compMissResp.toObject());
-
-        return new Response(string);
-    } catch (error) {
-        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-    }
+async function handle(_request, context) {
+	const { eid, mission_id: missionId } = context.params;
+	const mission = new context.proto.MissionInfo().setIdentifier(missionId);
+	const request = new context.proto.MissionRequest()
+		.setRinfo(basicRequest(context, eid))
+		.setInfo(mission)
+		.setEiUserId(eid);
+	const response = await postMessage(
+		context,
+		"/ei_afx/complete_mission",
+		request,
+		context.proto.CompleteMissionResponse,
+	);
+	return new Response(JSON.stringify(response.toObject()));
 }
 
 export { handle };

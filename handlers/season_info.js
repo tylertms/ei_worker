@@ -1,20 +1,13 @@
-import { decompressMessage } from "../utils/tools.js";
+import { postMessage } from "../egg-api.js";
 
-async function handle(request, context) {
-	try {
-		const response = await fetch(context.baseURL + "/ei_ctx/get_season_infos_v2", {
-			method: "POST"
-		});
-
-		const text = await response.text();
-		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
-		const seasonInfoResp = context.proto.ContractSeasonInfos.deserializeBinary(authMessage);
-		const string = JSON.stringify(seasonInfoResp.toObject());
-
-		return new Response(string);
-	} catch (error) {
-		return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-	}
+async function handle(_request, context) {
+	const response = await postMessage(
+		context,
+		"/ei_ctx/get_season_infos_v2",
+		undefined,
+		context.proto.ContractSeasonInfos,
+	);
+	return new Response(JSON.stringify(response.toObject()));
 }
 
 export { handle };

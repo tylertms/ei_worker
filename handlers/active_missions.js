@@ -1,79 +1,25 @@
-import { Buffer } from "node:buffer";
-import { createAuthHash, decompressMessage } from "../utils/tools.js";
+import { basicRequest, getBackup, postMessage, signedRequest } from "../egg-api.js";
 
-async function handle(request, context) {
-	const { eid: EID, reset_index: resetIndex } = context.params;
+async function handle(_request, context) {
+	const { eid, reset_index: requestedResetIndex } = context.params;
+	let resetIndex = requestedResetIndex;
 
-	try {
-		const bri = new context.proto.BasicRequestInfo()
-			.setEiUserId(EID)
-			.setClientVersion(99);
-
-		let resetCount;
-
-		if (resetIndex !== undefined) {
-			resetCount = resetIndex;
-		} else {
-			const fcr = new context.proto.EggIncFirstContactRequest()
-				.setRinfo(bri)
-				.setEiUserId(EID);
-
-			const fcrEncoded = Buffer.from(fcr.serializeBinary()).toString("base64");
-
-			const fcrParams = new URLSearchParams();
-			fcrParams.append("data", fcrEncoded);
-
-			const fcrResponse = await fetch(
-				context.baseURL + "/ei/bot_first_contact",
-				{
-					method: "POST",
-					body: fcrParams,
-				},
-			);
-
-			const fcrText = await fcrResponse.text();
-			const fcrResp =
-				context.proto.EggIncFirstContactResponse.deserializeBinary(fcrText);
-			if (fcrResp.hasBackup() && fcrResp.getBackup().hasVirtue()) {
-				resetCount = fcrResp.getBackup().getVirtue().getResets();
-			}
-		}
-
-		const getActiveMissionsReq = new context.proto.GetActiveMissionsRequest()
-			.setRinfo(bri)
-			.setResetIndex(resetCount);
-
-		const rawMessage = getActiveMissionsReq.serializeBinary();
-		const code = await createAuthHash(rawMessage, context.env);
-		const authReqMessage = new context.proto.AuthenticatedMessage()
-			.setMessage(rawMessage)
-			.setCode(code);
-
-		const b64encoded = Buffer.from(authReqMessage.serializeBinary()).toString("base64");
-
-		const params = new URLSearchParams();
-		params.append("data", b64encoded);
-
-		const response = await fetch(
-			context.baseURL + "/ei_afx/get_active_missions_v2",
-			{
-				method: "POST",
-				body: params,
-			},
-		);
-
-		const text = await response.text();
-		const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
-		const activeMissionsResp =
-			context.proto.GetActiveMissionsResponse.deserializeBinary(authMessage);
-		const string = JSON.stringify(activeMissionsResp.toObject());
-
-		return new Response(string);
-	} catch (error) {
-		return new Response(JSON.stringify({ error: error.message }), {
-			status: 500,
-		});
+	if (resetIndex === undefined) {
+		const backup = await getBackup(context, eid);
+		resetIndex = backup.hasVirtue() ? backup.getVirtue().getResets() : 0;
 	}
+
+	const request = new context.proto.GetActiveMissionsRequest()
+		.setRinfo(basicRequest(context, eid))
+		.setResetIndex(resetIndex);
+	const authenticated = await signedRequest(context, request);
+	const response = await postMessage(
+		context,
+		"/ei_afx/get_active_missions_v2",
+		authenticated,
+		context.proto.GetActiveMissionsResponse,
+	);
+	return new Response(JSON.stringify(response.toObject()));
 }
 
 export { handle };

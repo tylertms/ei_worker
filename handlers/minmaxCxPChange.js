@@ -1,63 +1,24 @@
-import { Buffer } from 'node:buffer';
-import { decompressMessage } from "../utils/tools.js";
+import { getArchive } from "./archive.js";
 
-async function handle(request, context) {
-    const { eid: EID } = context.params;
+async function handle(_request, context) {
+	const archive = (await getArchive(context)).toObject().archiveList;
+	let maximum = { contract: null, value: -Infinity };
+	let minimum = { contract: null, value: Infinity };
 
-    try {
-        const bri = new context.proto.BasicRequestInfo()
-            .setEiUserId(EID)
-            .setClientVersion(99);
+	for (const item of archive) {
+		const value = item.evaluation.cxpChange;
+		if (value > maximum.value) {
+			maximum = { contract: item.contract.identifier, value };
+		}
+		if (value < minimum.value) {
+			minimum = { contract: item.contract.identifier, value };
+		}
+	}
 
-        const b64encoded = Buffer.from(bri.serializeBinary()).toString('base64');
-
-        const params = new URLSearchParams();
-        params.append('data', b64encoded);
-
-        const response = await fetch(context.baseURL + "/ei_ctx/get_contracts_archive", {
-            method: "POST",
-            body: params
-        });
-
-        const text = await response.text();
-        const authMessage = await decompressMessage(context.proto.AuthenticatedMessage.deserializeBinary(text));
-        const archive = context.proto.ContractsArchive.deserializeBinary(authMessage);
-        const archiveList = archive.toObject().archiveList;
-
-        // Initialize variables to track max and min cxpChange
-        let maxcxpChange = -Infinity;
-        let mincxpChange = Infinity;
-        let maxCxpChangeContract = null;
-        let minCxpChangeContract = null;
-
-        // Iterate through the archiveList to find max and min cxpChange
-        for (const item of archiveList) {
-            const cxpChange = item.evaluation.cxpChange;
-
-            if (cxpChange !== undefined) {
-                if (cxpChange > maxcxpChange) {
-                    maxcxpChange = cxpChange;
-                    maxCxpChangeContract = item.contract.identifier;
-                }
-                if (cxpChange < mincxpChange) {
-                    mincxpChange = cxpChange;
-                    minCxpChangeContract = item.contract.identifier;
-                }
-            }
-        }
-
-        // Format the output as plain text
-        const outputText = `Highest cxpChange: ${maxcxpChange} for contract: ${maxCxpChangeContract}\n` +
-                           `Lowest cxpChange : ${mincxpChange} for contract: ${minCxpChangeContract}`;
-
-        // Return the results as a plain text response
-        return new Response(outputText, {
-            headers: { 'Content-Type': 'text/plain' }
-        });
-
-    } catch (error) {
-        return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
-    }
+	const output =
+		`Highest cxpChange: ${maximum.value} for contract: ${maximum.contract}\n` +
+		`Lowest cxpChange : ${minimum.value} for contract: ${minimum.contract}`;
+	return new Response(output);
 }
 
 export { handle };
