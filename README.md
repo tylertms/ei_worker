@@ -59,13 +59,16 @@ npm ci
 npm run dev
 ```
 
-Signed Egg, Inc. requests require these values in `.dev.vars` for local development and matching Worker secrets in production:
+Local development and integration tests read configuration from an ignored `.env` file:
 
 ```dotenv
+EI_TEST_EID=EI1234567890123456
 MAGIC=your_magic_value
 INDEX=your_index
 MARKER=your_marker
 ```
+
+Only `EI_TEST_EID` is required for the current live test suite. Signed endpoints additionally require `MAGIC`, `INDEX`, and `MARKER`. Configure matching Worker secrets in Cloudflare for production.
 
 Validation commands:
 
@@ -75,6 +78,14 @@ npm run check
 npm test
 npm run build
 ```
+
+Live API tests are opt-in and read the private test account identifier from `.env`:
+
+```
+npm run test_integration
+```
+
+The live suite retrieves a backup and periodicals directly from Egg, Inc. and builds the farm report locally. It does not include the EID or returned account data in test output or tracked files.
 
 Deploy with:
 

@@ -9,7 +9,8 @@
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
 		"format": "biome format --write .",
-		"test": "node --test"
+		"test": "node --test \"test/*_test.js\"",
+		"test_integration": "node --env-file=.env --test integration/api_test.js"
 	},
 	"dependencies": {
 		"google-protobuf": "3.21.4"
