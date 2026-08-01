@@ -71,7 +71,7 @@ const parameter_rules = {
 	grade: { integer: true, max: 5, min: 0 },
 	mission_id: { aliases: ["id"], max_length: 128 },
 	reset_index: { aliases: ["resetIndex"], integer: true, max: 1_000_000_000, min: 0 },
-	scope: { integer: true, max: 1, min: 0 },
+	scope: { max_length: 64, pattern: /^[A-Za-z0-9_-]+$/ },
 };
 
 export { endpoint_aliases, endpoints, json_content_type, parameter_rules };

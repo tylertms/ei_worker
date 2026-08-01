@@ -31,7 +31,7 @@ Examples:
 /active_artifacts?eid=EI1234567890123456&contract=contract_id
 /contract?eid=EI1234567890123456&contract=contract_id&coop=coop_name
 /completed_mission?eid=EI1234567890123456&mission_id=mission_identifier
-/leaderboard?eid=EI1234567890123456&scope=1&grade=5
+/leaderboard?eid=EI1234567890123456&scope=ALL_TIME&grade=5
 /active_missions?eid=EI1234567890123456&reset_index=12
 ```
 

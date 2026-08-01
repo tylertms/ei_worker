@@ -121,7 +121,7 @@ test("rejects missing, unknown, conflicting, and out-of-range parameters", async
 		"https://worker.example/backup",
 		"https://worker.example/backup?eid=EI123&typo=value",
 		"https://worker.example/backup?eid=EI123&EID=EI456",
-		"https://worker.example/leaderboard?eid=EI123&scope=2&grade=1",
+		"https://worker.example/leaderboard?eid=EI123&scope=invalid.value&grade=1",
 	];
 
 	for (const request of requests) {
