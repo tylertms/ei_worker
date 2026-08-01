@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { calculate_buffs } from "../handlers/coop_buffs.js";
+import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
 import { find_farm_index, get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
 import { get_colleggtible_rows, get_maximum_farm_sizes } from "../utils/colleggtibles.js";
 
@@ -109,4 +110,20 @@ test("builds safe colleggtible rows when buff metadata is missing", () => {
 			name: "Chocolate",
 		},
 	]);
+});
+
+test("ignores incomplete contract XP evaluations", () => {
+	const archive = [
+		{},
+		{ contract: { identifier: "missing_evaluation" } },
+		{ contract: { identifier: "low" }, evaluation: { cxpChange: -5 } },
+		{ contract: { identifier: "high" }, evaluation: { cxpChange: 10 } },
+		{ contract: { identifier: "invalid" }, evaluation: { cxpChange: Number.NaN } },
+	];
+
+	assert.deepEqual(get_cxp_extremes(archive), {
+		maximum: { contract: "high", value: 10 },
+		minimum: { contract: "low", value: -5 },
+	});
+	assert.equal(get_cxp_extremes([{}]), undefined);
 });

@@ -84,7 +84,11 @@ test("maps legacy parameter names and advertises the canonical URL", async () =>
 });
 
 test("maps legacy endpoint names", async () => {
+	const local_contract = new proto.LocalContract()
+		.setContract(new proto.Contract().setIdentifier("test_contract"))
+		.setEvaluation(new proto.ContractEvaluation().setCxpChange(1));
 	const archive = new proto.ContractsArchive();
+	archive.addArchive(local_contract);
 	const authenticated = new proto.AuthenticatedMessage().setMessage(archive.serializeBinary());
 	const payload = Buffer.from(authenticated.serializeBinary()).toString("base64");
 	const response = await withFetch(payload, () =>
