@@ -68,7 +68,7 @@ INDEX=your_index
 MARKER=your_marker
 ```
 
-Only `EI_TEST_EID` is required for the current live test suite. Signed endpoints additionally require `MAGIC`, `INDEX`, and `MARKER`. Configure matching Worker secrets in Cloudflare for production.
+All four values are required by the live test suite. Configure matching Worker secrets in Cloudflare for production.
 
 Validation commands:
 
@@ -85,7 +85,7 @@ Live API tests are opt-in and read the private test account identifier from `.en
 npm run test_integration
 ```
 
-The live suite retrieves a backup and periodicals directly from Egg, Inc. and builds the farm report locally. It does not include the EID or returned account data in test output or tracked files.
+The live suite exercises every endpoint against Egg, Inc. Contract and coop identifiers are taken from the test account when available, with guaranteed nonexistent identifiers used otherwise. The completed mission check also uses a guaranteed nonexistent identifier so it cannot collect or change a real mission. The suite does not include the EID or returned account data in test output or tracked files.
 
 Deploy with:
 
