@@ -84,12 +84,12 @@ function successor_url(request_url, path, used_aliases) {
 	return url.toString();
 }
 
-function add_headers(response, type, successor) {
+function add_headers(response, type, successor, cache_control) {
 	const headers = new Headers(response.headers);
 	for (const [name, value] of Object.entries(public_headers)) {
 		headers.set(name, value);
 	}
-	headers.set("Cache-Control", headers.get("Cache-Control") ?? "no-store");
+	headers.set("Cache-Control", cache_control ?? headers.get("Cache-Control") ?? "no-store");
 	if (type) {
 		headers.set("Content-Type", type);
 	}

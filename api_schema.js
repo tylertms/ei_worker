@@ -50,10 +50,10 @@ const endpoints = {
 		params: ["eid", "scope", "grade"],
 		type: json_content_type,
 	},
-	leaderboard_info: { handle: leaderboard_info, type: json_content_type },
+	leaderboard_info: { cache_seconds: 300, handle: leaderboard_info, type: json_content_type },
 	minmax_cxp_change: { handle: minmax_cxp_change, params: ["eid"], type: text_content_type },
 	periodicals: { handle: periodicals, params: ["eid"], type: json_content_type },
-	season_info: { handle: season_info, type: json_content_type },
+	season_info: { cache_seconds: 300, handle: season_info, type: json_content_type },
 	sub_status: { handle: sub_status, params: ["eid"], type: json_content_type },
 	yon_farm_info: { handle: yon_farm_info, params: ["eid"], type: csv_content_type },
 };

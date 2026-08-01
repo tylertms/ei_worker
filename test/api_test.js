@@ -124,3 +124,40 @@ test("returns a structured public error for unknown endpoints", async () => {
 	});
 	assert.equal(response.headers.get("Access-Control-Allow-Origin"), "*");
 });
+
+test("caches only account-independent metadata responses", async () => {
+	const original_fetch = globalThis.fetch;
+	const original_caches = globalThis.caches;
+	let fetch_count = 0;
+	let cached_response;
+	const message = new proto.AuthenticatedMessage().setMessage(
+		new proto.LeaderboardInfo().serializeBinary(),
+	);
+	const payload = buffer.from(message.serializeBinary()).toString("base64");
+	globalThis.fetch = async () => {
+		fetch_count += 1;
+		return new Response(payload);
+	};
+	globalThis.caches = {
+		default: {
+			match: async () => cached_response?.clone(),
+			put: async (_request, response) => {
+				cached_response = response.clone();
+			},
+		},
+	};
+
+	try {
+		const request = new Request("https://worker.example/leaderboard_info");
+		const first = await handle_request(request);
+		const second = await handle_request(request);
+		assert.equal(first.status, 200);
+		assert.equal(second.status, 200);
+		assert.equal(fetch_count, 1);
+		assert.equal(first.headers.get("Cache-Control"), "public, max-age=300, s-maxage=300");
+	} finally {
+		globalThis.fetch = original_fetch;
+		if (original_caches === undefined) delete globalThis.caches;
+		else globalThis.caches = original_caches;
+	}
+});
