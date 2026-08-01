@@ -126,6 +126,15 @@ test("retrieves and decodes the live contract archive", { timeout }, async () =>
 	assert.equal(Array.isArray(archive.archiveList), true);
 });
 
+test("retrieves and summarizes live contract evaluations", { timeout }, async () => {
+	const result = await get_json("contract_evaluations", { eid: test_eid });
+	assert.equal(Array.isArray(result.evaluations), true);
+	assert.equal(result.summary.count, result.evaluations.length);
+	for (const evaluation of result.evaluations) {
+		assert.equal(typeof evaluation.contract_identifier, "string");
+	}
+});
+
 test("retrieves and decodes live leaderboard metadata", { timeout }, async () => {
 	const info = await get_leaderboard_info();
 	assert.equal(typeof info.allTimeScope, "string");

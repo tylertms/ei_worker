@@ -102,6 +102,16 @@ const cases = [
 		content_type: "application/json",
 		fetch: async (input) =>
 			new Response(
+				String(input).endsWith("/ei_ctx/get_contracts_archive")
+					? authenticated_payload(archive)
+					: authenticated_payload(periodicals),
+			),
+		path: "contract_evaluations?eid=EI123",
+	},
+	{
+		content_type: "application/json",
+		fetch: async (input) =>
+			new Response(
 				String(input).endsWith("/ei/bot_first_contact")
 					? backup_payload(backup)
 					: authenticated_payload(periodicals),

@@ -7,6 +7,7 @@ import { handle as backup } from "../handlers/backup.js";
 import { handle as colleggtibles } from "../handlers/colleggtibles.js";
 import { handle as completed_mission } from "../handlers/completed_mission.js";
 import { handle as contract } from "../handlers/contract.js";
+import { handle as contract_evaluations } from "../handlers/contract_evaluations.js";
 import { handle as contracts } from "../handlers/contracts.js";
 import { handle as coop_buffs } from "../handlers/coop_buffs.js";
 import { handle as farms } from "../handlers/farms.js";
@@ -49,6 +50,11 @@ const endpoints = {
 	contract: {
 		handle: contract,
 		params: ["eid", "contract", "coop"],
+		type: json_content_type,
+	},
+	contract_evaluations: {
+		handle: contract_evaluations,
+		params: ["eid"],
 		type: json_content_type,
 	},
 	contracts: { handle: contracts, params: ["eid"], type: json_content_type },

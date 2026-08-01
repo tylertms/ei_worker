@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { build_artifact_inventory } from "../handlers/artifact_inventory.js";
 import { build_colleggtibles } from "../handlers/colleggtibles.js";
+import { build_contract_evaluations } from "../handlers/contract_evaluations.js";
 import { build_contracts } from "../handlers/contracts.js";
 import { calculate_buffs } from "../handlers/coop_buffs.js";
 import { build_farms } from "../handlers/farms.js";
@@ -231,6 +232,31 @@ test("ignores incomplete contract XP evaluations", () => {
 		minimum: { contract: "low", value: -5 },
 	});
 	assert.equal(get_cxp_extremes([{}]), undefined);
+});
+
+test("merges and summarizes contract evaluations", () => {
+	const evaluation = {
+		completionTime: 10,
+		contractIdentifier: "contract_id",
+		coopIdentifier: "coop_id",
+		cxpChange: 5,
+		grade: 4,
+	};
+	const result = build_contract_evaluations(
+		{ archiveList: [{ contract: { name: "Contract" }, evaluation }] },
+		{ evaluationsList: [evaluation] },
+	);
+
+	assert.equal(result.evaluations.length, 1);
+	assert.equal(result.evaluations[0].contract_identifier, "contract_id");
+	assert.equal(result.evaluations[0].completion_time, 10);
+	assert.deepEqual(result.summary, {
+		average_cxp_change: 5,
+		count: 1,
+		maximum_cxp_change: 5,
+		minimum_cxp_change: 5,
+		total_cxp_change: 5,
+	});
 });
 
 test("groups active, available, and completed contracts", () => {
