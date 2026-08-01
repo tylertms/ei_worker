@@ -9,6 +9,7 @@ async function handle_request(request, env, execution_context) {
 	const requested_path = url.pathname.replace(/^\/+|\/+$/g, "");
 	const path = endpoint_aliases[requested_path] ?? requested_path;
 	const endpoint = endpoints[path];
+	let successor;
 
 	try {
 		if (!endpoint) {
@@ -18,16 +19,20 @@ async function handle_request(request, env, execution_context) {
 			return add_headers(new Response(null, { status: 204 }));
 		}
 		if (request.method !== "GET") {
-			return add_headers(new Response(null, { headers: { Allow: "GET, OPTIONS" }, status: 405 }));
+			const response = error_response(
+				new api_error(405, "method_not_allowed", "Only GET and OPTIONS are supported"),
+			);
+			response.headers.set("Allow", "GET, OPTIONS");
+			return add_headers(response);
 		}
 
 		const { params, used_aliases } = parse_parameters(url, endpoint);
+		const deprecated = requested_path !== path || used_aliases.length > 0;
+		successor = deprecated ? successor_url(request.url, path, used_aliases) : undefined;
 		const cache = endpoint.cache_seconds ? globalThis.caches?.default : undefined;
 		const cached_response = await cache?.match(request);
 		if (cached_response) return cached_response;
 		const response = await endpoint.handle(request, { base_url, env, params, proto });
-		const deprecated = requested_path !== path || used_aliases.length > 0;
-		const successor = deprecated ? successor_url(request.url, path, used_aliases) : undefined;
 		const cache_control = endpoint.cache_seconds
 			? `public, max-age=${endpoint.cache_seconds}, s-maxage=${endpoint.cache_seconds}`
 			: undefined;
@@ -39,7 +44,7 @@ async function handle_request(request, env, execution_context) {
 		}
 		return public_response;
 	} catch (error) {
-		return add_headers(error_response(error));
+		return add_headers(error_response(error), endpoint?.type, successor);
 	}
 }
 

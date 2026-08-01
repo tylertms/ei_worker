@@ -66,6 +66,9 @@ test("rejects methods other than GET and OPTIONS", async () => {
 
 	assert.equal(response.status, 405);
 	assert.equal(response.headers.get("Allow"), "GET, OPTIONS");
+	assert.deepEqual(await response.json(), {
+		error: { code: "method_not_allowed", message: "Only GET and OPTIONS are supported" },
+	});
 });
 
 test("maps legacy parameter names and advertises the canonical URL", async () => {
@@ -96,6 +99,19 @@ test("maps legacy endpoint names", async () => {
 	);
 
 	assert.equal(response.status, 200);
+	assert.equal(response.headers.get("Deprecation"), "true");
+	assert.match(response.headers.get("Link"), /\/minmax_cxp_change\?eid=EI123/);
+});
+
+test("advertises canonical aliases on endpoint errors", async () => {
+	const archive = new proto.ContractsArchive();
+	const authenticated = new proto.AuthenticatedMessage().setMessage(archive.serializeBinary());
+	const payload = buffer.from(authenticated.serializeBinary()).toString("base64");
+	const response = await with_fetch(payload, () =>
+		handle_request(new Request("https://worker.example/minmaxCxPChange?EID=EI123")),
+	);
+
+	assert.equal(response.status, 404);
 	assert.equal(response.headers.get("Deprecation"), "true");
 	assert.match(response.headers.get("Link"), /\/minmax_cxp_change\?eid=EI123/);
 });
