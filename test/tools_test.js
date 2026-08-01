@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { decompress_message } from "../utils/tools.js";
+import { decompress_message, get_buff_level } from "../utils/tools.js";
 
 async function compress(bytes) {
 	const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream("deflate"));
@@ -47,4 +47,13 @@ test("rejects decompressed data with the wrong declared size", async () => {
 		decompress_message(authenticated_message(compressed, original.length + 1)),
 		/size did not match/,
 	);
+});
+
+test("maps colleggtible population thresholds to stable buff levels", () => {
+	assert.equal(get_buff_level(0), 0);
+	assert.equal(get_buff_level(9_999_999), 0);
+	assert.equal(get_buff_level(10_000_000), 1);
+	assert.equal(get_buff_level(100_000_000), 2);
+	assert.equal(get_buff_level(1_000_000_000), 3);
+	assert.equal(get_buff_level(10_000_000_000), 4);
 });

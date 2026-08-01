@@ -83,7 +83,7 @@ function get_buff_level(max_farm_reached) {
 	if (max_farm_reached >= 1_000_000_000) return 3;
 	if (max_farm_reached >= 100_000_000) return 2;
 	if (max_farm_reached >= 10_000_000) return 1;
-	return Number.NaN;
+	return 0;
 }
 
 function get_artifact_level(number) {
