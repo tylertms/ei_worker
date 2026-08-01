@@ -6,6 +6,7 @@ import { build_contracts } from "../handlers/contracts.js";
 import { calculate_buffs } from "../handlers/coop_buffs.js";
 import { build_farms } from "../handlers/farms.js";
 import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
+import { build_missions } from "../handlers/missions.js";
 import { find_farm_index, get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
 import { get_colleggtible_rows, get_maximum_farm_sizes } from "../utils/colleggtibles.js";
 
@@ -255,4 +256,24 @@ test("groups active, available, and completed contracts", () => {
 	assert.equal(contracts.active[0].grade.name, "AAA");
 	assert.equal(contracts.available[0].identifier, "available");
 	assert.equal(contracts.completed[0].state, "COMPLETED");
+});
+
+test("builds read-only mission state with snake case fields", () => {
+	const missions = build_missions(
+		{
+			artifactsDb: {
+				fuelingMission: { identifier: "fueling", resetIndex: 2 },
+				missionArchiveList: [{ identifier: "archived", secondsRemaining: 0 }],
+				missionInfosList: [{ identifier: "active", secondsRemaining: 10 }],
+			},
+			mission: { missionsList: [{ completed: true, referenceValue: 4 }] },
+		},
+		{ artifactCasesList: [{ success: true }] },
+	);
+
+	assert.equal(missions.fueling.reset_index, 2);
+	assert.equal(missions.active[0].seconds_remaining, 10);
+	assert.equal(missions.archive[0].identifier, "archived");
+	assert.equal(missions.progress[0].reference_value, 4);
+	assert.equal(missions.returned[0].success, true);
 });

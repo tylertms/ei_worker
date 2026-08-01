@@ -13,6 +13,7 @@ import { handle as farms } from "../handlers/farms.js";
 import { handle as leaderboard } from "../handlers/leaderboard.js";
 import { handle as leaderboard_info } from "../handlers/leaderboard_info.js";
 import { handle as minmax_cxp_change } from "../handlers/minmax_cxp_change.js";
+import { handle as missions } from "../handlers/missions.js";
 import { handle as periodicals } from "../handlers/periodicals.js";
 import { handle as season_info } from "../handlers/season_info.js";
 import { handle as sub_status } from "../handlers/sub_status.js";
@@ -60,6 +61,7 @@ const endpoints = {
 	},
 	leaderboard_info: { cache_seconds: 300, handle: leaderboard_info, type: json_content_type },
 	minmax_cxp_change: { handle: minmax_cxp_change, params: ["eid"], type: text_content_type },
+	missions: { handle: missions, params: ["eid"], type: json_content_type },
 	periodicals: { handle: periodicals, params: ["eid"], type: json_content_type },
 	season_info: { cache_seconds: 300, handle: season_info, type: json_content_type },
 	sub_status: { handle: sub_status, params: ["eid"], type: json_content_type },

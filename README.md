@@ -23,6 +23,7 @@ ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests a
 | `/leaderboard`       | `eid`, `scope`, `grade`       | Leaderboard data                                                |
 | `/leaderboard_info`  | None                          | Leaderboard metadata                                            |
 | `/minmax_cxp_change` | `eid`                         | Highest and lowest contract XP change as text                   |
+| `/missions`          | `eid`                         | Fueling, active, returned, and archived artifact missions       |
 | `/periodicals`       | `eid`                         | Current contracts and events                                    |
 | `/season_info`       | None                          | Contract season metadata                                        |
 | `/sub_status`        | `eid`                         | Subscription status                                             |

@@ -209,6 +209,14 @@ test("retrieves live active missions", { timeout }, async () => {
 	assert.equal(typeof missions, "object");
 });
 
+test("retrieves the live read-only mission dashboard", { timeout }, async () => {
+	const missions = await get_json("missions", { eid: test_eid });
+	assert.equal(Array.isArray(missions.active), true);
+	assert.equal(Array.isArray(missions.archive), true);
+	assert.equal(Array.isArray(missions.progress), true);
+	assert.equal(Array.isArray(missions.returned), true);
+});
+
 test("retrieves a live leaderboard", { timeout }, async () => {
 	const info = await get_leaderboard_info();
 	const leaderboard = await get_json("leaderboard", {
