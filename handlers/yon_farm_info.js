@@ -1,4 +1,5 @@
 import { get_backup } from "../egg_api.js";
+import { get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
 import {
 	big_number_to_string,
 	convert_grade,
@@ -62,9 +63,8 @@ async function handle(_request, context) {
 	const activeContracts = backup.contracts.contractsList.map(
 		(contract) => contract.contract.identifier,
 	);
-	backup.farmsList = backup.farmsList.filter(
-		(farm) => farm.farmType == 2 || activeContracts.includes(farm.contractId),
-	);
+	const farm_records = select_report_farms(backup.farmsList, activeContracts);
+	backup.farmsList = farm_records.map(({ farm }) => farm);
 
 	csv = csv.slice(0, -1) + "\n\n-,Home,";
 	backup.farmsList.forEach((farm) => {
@@ -105,19 +105,8 @@ async function handle(_request, context) {
 		"Farm,ArtifactType,ArtifactRarity,ArtifactTier,Stone1,Stone2,Stone3,",
 	];
 
-	for (const farm of backup.farmsList) {
-		let farmIndex = 0;
-		if (farm.contractId) {
-			farmIndex = backup.farmsList.findIndex((c) => c.contractId === farm.contractId);
-		} else {
-			farmIndex = backup.farmsList.findIndex((c) => c.farmType === 2);
-		}
-
-		const mappedArtis = (backup.artifactsDb.activeArtifactSetsList[farmIndex]?.slotsList ?? []).map(
-			(slot) => {
-				return backup.artifactsDb.inventoryItemsList.find((i) => i.itemId === slot.itemId);
-			},
-		);
+	for (const { farm, farm_index } of farm_records) {
+		const mappedArtis = get_active_artifacts(backup.artifactsDb, farm_index);
 
 		const farmName = farm.contractId ? farm.contractId : "Home";
 

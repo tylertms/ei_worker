@@ -1,13 +1,14 @@
 import { get_backup } from "../egg_api.js";
+import { api_error } from "../errors.js";
+import { find_farm_index, get_active_artifacts } from "../utils/artifacts.js";
 
 async function handle(_request, context) {
 	const backup = (await get_backup(context, context.params.eid)).toObject();
-	const farm_index = context.params.contract
-		? backup.farmsList.findIndex((farm) => farm.contractId === context.params.contract)
-		: backup.farmsList.findIndex((farm) => farm.farmType === 2);
-	const artifacts = (backup.artifactsDb.activeArtifactSetsList[farm_index]?.slotsList ?? []).map(
-		(slot) => backup.artifactsDb.inventoryItemsList.find((item) => item.itemId === slot.itemId),
-	);
+	const farm_index = find_farm_index(backup.farmsList, context.params.contract);
+	if (farm_index < 0) {
+		throw new api_error(404, "farm_not_found", "Requested farm was not found");
+	}
+	const artifacts = get_active_artifacts(backup.artifactsDb, farm_index);
 	return new Response(JSON.stringify(artifacts));
 }
 
