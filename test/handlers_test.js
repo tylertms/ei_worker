@@ -64,7 +64,7 @@ test("maps equipped artifacts and omits empty slots", () => {
 	assert.deepEqual(get_active_artifacts(undefined, 0), []);
 });
 
-test("prefers the highest v73 colleggtible availability value", () => {
+test("prefers the highest colleggtible availability value", () => {
 	const contracts = [
 		{
 			contract: { customEggId: "chocolate", egg: 200 },

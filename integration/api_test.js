@@ -20,7 +20,7 @@ async function get_live_response(path) {
 	return response;
 }
 
-test("retrieves and decodes a live v73 backup", { timeout: 30_000 }, async () => {
+test("retrieves and decodes a live backup", { timeout: 30_000 }, async () => {
 	const response = await get_live_response("backup");
 	assert.match(response.headers.get("Content-Type") ?? "", /^application\/json/);
 	assert.equal(response.headers.get("Cache-Control"), "no-store");
