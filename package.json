@@ -1,19 +1,22 @@
 {
-	"name": "template-worker-router",
-	"version": "0.0.0",
+	"name": "ei-worker",
+	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"deploy": "wrangler deploy index.js",
-		"dev": "wrangler dev index.js",
-		"test": "vitest"
+		"build": "wrangler deploy --dry-run --outdir dist",
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"format": "biome format --write .",
+		"test": "node --test"
 	},
 	"dependencies": {
-		"fs": "^0.0.1-security",
-		"google-protobuf": "^3.21.2",
-		"itty-router": "^2.6.6",
-		"path": "^0.12.7"
+		"google-protobuf": "3.21.4"
 	},
 	"devDependencies": {
-		"wrangler": "^4.6.0"
+		"@biomejs/biome": "2.5.6",
+		"wrangler": "4.118.0"
+	},
+	"engines": {
+		"node": ">=22"
 	}
 }
