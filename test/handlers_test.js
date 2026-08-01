@@ -3,6 +3,7 @@ import test from "node:test";
 
 import { calculate_buffs } from "../handlers/coop_buffs.js";
 import { find_farm_index, get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
+import { get_colleggtible_rows, get_maximum_farm_sizes } from "../utils/colleggtibles.js";
 
 test("calculates current coop buffs without cumulative rounding error", () => {
 	const contributors = [
@@ -60,4 +61,52 @@ test("maps equipped artifacts and omits empty slots", () => {
 		artifacts_database.inventoryItemsList[0],
 	]);
 	assert.deepEqual(get_active_artifacts(undefined, 0), []);
+});
+
+test("prefers the highest v73 colleggtible availability value", () => {
+	const contracts = [
+		{
+			contract: { customEggId: "chocolate", egg: 200 },
+			maxFarmSizeReached: 100_000_000,
+		},
+	];
+	const availability = [
+		{ eggId: "chocolate", maxFarmSizeReached: 1_000_000_000 },
+		{ eggId: "waterballoon", maxFarmSizeReached: 10_000_000 },
+	];
+
+	assert.deepEqual(
+		[...get_maximum_farm_sizes(contracts, availability)],
+		[
+			["chocolate", 1_000_000_000],
+			["waterballoon", 10_000_000],
+		],
+	);
+});
+
+test("builds safe colleggtible rows when buff metadata is missing", () => {
+	const maximums = new Map([["chocolate", 1_000_000_000]]);
+	const rows = get_colleggtible_rows(
+		[
+			{
+				buffsList: [],
+				identifier: "chocolate",
+				name: "Chocolate",
+				value: 10,
+			},
+		],
+		maximums,
+	);
+
+	assert.deepEqual(rows, [
+		{
+			buff_type: "INVALID",
+			buff_value: 1,
+			egg_value: 10,
+			id: "chocolate",
+			image_url: "",
+			maximum_farm_size: 1_000_000_000,
+			name: "Chocolate",
+		},
+	]);
 });

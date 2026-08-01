@@ -1,13 +1,12 @@
 import { get_backup } from "../egg_api.js";
 import { get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
+import { get_colleggtible_rows, get_maximum_farm_sizes } from "../utils/colleggtibles.js";
 import {
 	big_number_to_string,
 	convert_grade,
 	get_artifact_level,
 	get_artifact_name,
 	get_artifact_rarity,
-	get_buff_level,
-	get_dimension,
 	get_egg_name,
 } from "../utils/tools.js";
 import { get_periodicals } from "./periodicals.js";
@@ -172,44 +171,17 @@ async function handle(_request, context) {
 		}
 	});
 
-	const groupedByCustomEggId = combinedContractsList.reduce((acc, contract) => {
-		if (contract.contract.egg === 200 && Object.hasOwn(contract, "maxFarmSizeReached")) {
-			const key = contract.contract.customEggId;
-			if (key) {
-				if (!acc[key]) {
-					acc[key] = [];
-				}
-				acc[key].push({
-					maxFarmReached: contract.maxFarmSizeReached,
-					customEggId: contract.contract.customEggId,
-					egg: contract.contract.egg,
-				});
-			}
-		}
-		return acc;
-	}, {});
-
 	let colleggtiblesSection =
 		"\n\nColleggtibles\nID,Buff Type,Buff Value,Image URL,Egg Value,Name\n";
-
-	for (const customEgg of periodicals.contracts.customEggsList) {
-		const customEggId = customEgg.identifier;
-		const maxFarmReachedValues = groupedByCustomEggId[customEggId]?.map(
-			(contract) => contract.maxFarmReached,
-		) || [0];
-		const maxFarmReached = Math.max(...maxFarmReachedValues);
-		const buffLevel = get_buff_level(maxFarmReached);
-
-		const buffsList = customEgg.buffsList;
-		const index = Math.min(buffsList.length - 1, buffLevel - 1); // Cap index at the last element if buffLevel exceeds bounds
-		const buff = buffsList[index];
-		const dimension = buffsList[0].dimension || 0;
-		const buffValue = buff ? buff.value : 1;
-
-		const buffType = get_dimension(dimension);
-		const eggImageLink = customEgg.icon.url;
-
-		colleggtiblesSection += `${customEggId},${buffType},${buffValue},${eggImageLink},${customEgg.value},${customEgg.name}\n`;
+	const maximum_farm_sizes = get_maximum_farm_sizes(
+		combinedContractsList,
+		backup.contracts.colleggtibleMaxFarmSizeReachedList ?? [],
+	);
+	for (const row of get_colleggtible_rows(
+		periodicals.contracts.customEggsList,
+		maximum_farm_sizes,
+	)) {
+		colleggtiblesSection += `${row.id},${row.buff_type},${row.buff_value},${row.image_url},${row.egg_value},${row.name}\n`;
 	}
 	csv += colleggtiblesSection;
 
