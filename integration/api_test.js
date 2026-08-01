@@ -147,6 +147,15 @@ test("retrieves and decodes live periodicals", { timeout }, async () => {
 	assert.equal(Array.isArray(periodicals.artifactCasesList), true);
 });
 
+test("retrieves live events", { timeout }, async () => {
+	const events = await get_json("events", { eid: test_eid });
+	assert.equal(Array.isArray(events), true);
+	for (const event of events) {
+		assert.equal(typeof event.identifier, "string");
+		assert.equal(typeof event.seconds_remaining, "number");
+	}
+});
+
 test("retrieves live colleggtible progress", { timeout }, async () => {
 	const colleggtibles = await get_json("colleggtibles", { eid: test_eid });
 	assert.equal(Array.isArray(colleggtibles), true);

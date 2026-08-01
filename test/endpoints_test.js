@@ -135,6 +135,11 @@ const cases = [
 	},
 	{
 		content_type: "application/json",
+		fetch: fixed_response(authenticated_payload(periodicals)),
+		path: "events?eid=EI123",
+	},
+	{
+		content_type: "application/json",
 		fetch: fixed_response(authenticated_payload(new proto.LeaderboardResponse())),
 		path: "leaderboard?eid=EI123&scope=ALL_TIME&grade=5",
 	},

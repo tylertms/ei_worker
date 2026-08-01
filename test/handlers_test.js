@@ -6,6 +6,7 @@ import { build_contract_evaluations } from "../handlers/contract_evaluations.js"
 import { build_contracts } from "../handlers/contracts.js";
 import { calculate_buffs } from "../handlers/coop_buffs.js";
 import { build_coop_summary } from "../handlers/coop_summary.js";
+import { build_events } from "../handlers/events.js";
 import { build_farms } from "../handlers/farms.js";
 import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
 import { build_missions } from "../handlers/missions.js";
@@ -105,6 +106,21 @@ test("builds structured home and contract farms", () => {
 	assert.equal(farms[1].coop_id, "coop_id");
 	assert.equal(farms[1].egg.name, "contract_id");
 	assert.equal(farms[1].tokens.balance, 2);
+});
+
+test("builds ordered current events with snake case fields", () => {
+	const events = build_events({
+		events: {
+			eventsList: [
+				{ ccOnly: true, duration: 100, identifier: "later", secondsRemaining: 20, startTime: 10 },
+				{ identifier: "sooner", secondsRemaining: 5 },
+			],
+		},
+	});
+
+	assert.equal(events[0].identifier, "sooner");
+	assert.equal(events[1].cc_only, true);
+	assert.equal(events[1].end_time, 110);
 });
 
 test("maps equipped artifacts and omits empty slots", () => {
