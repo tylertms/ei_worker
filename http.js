@@ -1,4 +1,5 @@
 import { json_content_type, parameter_rules } from "./api_schema.js";
+import { api_error } from "./errors.js";
 
 const public_headers = {
 	"Access-Control-Allow-Headers": "Content-Type",
@@ -9,15 +10,6 @@ const public_headers = {
 	"Referrer-Policy": "no-referrer",
 	"X-Content-Type-Options": "nosniff",
 };
-
-class api_error extends Error {
-	constructor(status, code, message) {
-		super(message);
-		this.status = status;
-		this.code = code;
-		this.expose = true;
-	}
-}
 
 function parse_parameters(url, endpoint) {
 	const required = endpoint.params ?? [];
