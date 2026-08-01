@@ -16,6 +16,7 @@ ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests a
 | `/colleggtibles`     | `eid`                         | Colleggtible progress, tiers, and buffs                          |
 | `/completed_mission` | `eid`, `mission_id`           | Completed missions                                              |
 | `/contract`          | `eid`, `contract`, `coop`     | Coop status                                                     |
+| `/contracts`         | `eid`                         | Active, available, and completed contract summaries             |
 | `/coop_buffs`        | `eid`, `contract`, `coop`     | Deflector and SIAB totals as CSV                                |
 | `/farms`             | `eid`                         | Structured home and contract farm details                       |
 | `/leaderboard`       | `eid`, `scope`, `grade`       | Leaderboard data                                                |

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { build_colleggtibles } from "../handlers/colleggtibles.js";
+import { build_contracts } from "../handlers/contracts.js";
 import { calculate_buffs } from "../handlers/coop_buffs.js";
 import { build_farms } from "../handlers/farms.js";
 import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
@@ -203,4 +204,29 @@ test("ignores incomplete contract XP evaluations", () => {
 		minimum: { contract: "low", value: -5 },
 	});
 	assert.equal(get_cxp_extremes([{}]), undefined);
+});
+
+test("groups active, available, and completed contracts", () => {
+	const backup = {
+		contracts: {
+			archiveList: [{ cancelled: false, contractIdentifier: "complete", grade: 4 }],
+			contractsList: [{ contractIdentifier: "active", coopIdentifier: "coop", grade: 5 }],
+		},
+	};
+	const periodicals = {
+		contracts: {
+			contractsList: [
+				{ identifier: "active", name: "Active" },
+				{ identifier: "complete", name: "Complete" },
+				{ identifier: "available", name: "Available" },
+			],
+		},
+	};
+
+	const contracts = build_contracts(backup, periodicals);
+	assert.equal(contracts.active[0].identifier, "active");
+	assert.equal(contracts.active[0].coop_id, "coop");
+	assert.equal(contracts.active[0].grade.name, "AAA");
+	assert.equal(contracts.available[0].identifier, "available");
+	assert.equal(contracts.completed[0].state, "COMPLETED");
 });

@@ -169,6 +169,17 @@ test("retrieves a live coop status", { timeout }, async () => {
 	assert.equal(Array.isArray(contract.contributorsList), true);
 });
 
+test("retrieves grouped live contracts", { timeout }, async () => {
+	const contracts = await get_json("contracts", { eid: test_eid });
+	assert.equal(Array.isArray(contracts.active), true);
+	assert.equal(Array.isArray(contracts.available), true);
+	assert.equal(Array.isArray(contracts.completed), true);
+	for (const contract of [...contracts.active, ...contracts.available, ...contracts.completed]) {
+		assert.equal(typeof contract.identifier, "string");
+		assert.equal(typeof contract.grade.name, "string");
+	}
+});
+
 test("calculates live coop buffs", { timeout }, async () => {
 	const active_coop = find_active_coop(await get_backup());
 	const response = await get_successful_response("coop_buffs", {

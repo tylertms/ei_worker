@@ -94,6 +94,16 @@ const cases = [
 		path: "contract?eid=EI123&contract=contract_id&coop=coop_id",
 	},
 	{
+		content_type: "application/json",
+		fetch: async (input) =>
+			new Response(
+				String(input).endsWith("/ei/bot_first_contact")
+					? backup_payload(backup)
+					: authenticated_payload(periodicals),
+			),
+		path: "contracts?eid=EI123",
+	},
+	{
 		content_type: "text/csv",
 		fetch: fixed_response(authenticated_payload(new proto.ContractCoopStatusResponse())),
 		path: "coop_buffs?eid=EI123&contract=contract_id&coop=coop_id",
