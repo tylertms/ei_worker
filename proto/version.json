@@ -1,9 +1,0 @@
-{
-	"backup_version": 73,
-	"generated_sha256": "480d0aed475ca576f99637bec3b4844cd242ad76c73932e1f8a3eccf9dcf5d55",
-	"protoc_gen_js_version": "3.21.4-4",
-	"protoc_version": "35.1.0",
-	"source_commit": "d5b99e3904a6bf02ede3c733bc13690ae56467f9",
-	"source_repository": "https://github.com/elgranjero/EggIncProtos",
-	"source_sha256": "7e0c0d2bf034a3a42cce504e2af129e4f2556b1e690b72964b4370a7c3f2d7eb"
-}

@@ -1,4 +1,3 @@
 * text=auto eol=lf
 
 ei_pb.cjs linguist-generated=true
-proto/ei.proto -whitespace linguist-vendored=true
