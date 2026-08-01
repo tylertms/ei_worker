@@ -1,4 +1,4 @@
-import { basic_request, post_message } from "../egg_api.js";
+import { basic_request, post_message } from "../services/egg_api.js";
 
 async function get_contract(context) {
 	const { contract, coop, eid } = context.params;

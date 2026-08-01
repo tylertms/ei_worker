@@ -1,4 +1,4 @@
-import { post_message } from "../egg_api.js";
+import { post_message } from "../services/egg_api.js";
 
 async function handle(_request, context) {
 	const response = await post_message(

@@ -1,4 +1,4 @@
-import { basic_request, post_message, signed_request } from "../egg_api.js";
+import { basic_request, post_message, signed_request } from "../services/egg_api.js";
 
 async function handle(_request, context) {
 	const { eid, grade, scope } = context.params;

@@ -1,5 +1,5 @@
+import { api_error } from "../api/errors.js";
 import proto from "../ei_pb.cjs";
-import { api_error } from "../errors.js";
 
 const suffixes = {
 	0: "",

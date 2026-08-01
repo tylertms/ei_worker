@@ -1,4 +1,4 @@
-import { api_error } from "../errors.js";
+import { api_error } from "../api/errors.js";
 import { get_archive } from "./archive.js";
 
 function get_cxp_extremes(archive) {

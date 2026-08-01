@@ -1,6 +1,12 @@
-import { endpoint_aliases, endpoints } from "./api_schema.js";
+import {
+	add_headers,
+	api_error,
+	error_response,
+	parse_parameters,
+	successor_url,
+} from "./api/http.js";
+import { endpoint_aliases, endpoints } from "./api/schema.js";
 import proto from "./ei_pb.cjs";
-import { add_headers, api_error, error_response, parse_parameters, successor_url } from "./http.js";
 
 const base_url = "https://ctx-dot-auxbrainhome.appspot.com";
 

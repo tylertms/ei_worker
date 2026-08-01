@@ -1,5 +1,5 @@
-import { json_content_type, parameter_rules } from "./api_schema.js";
 import { api_error } from "./errors.js";
+import { json_content_type, parameter_rules } from "./schema.js";
 
 const public_headers = {
 	"Access-Control-Allow-Headers": "Content-Type",

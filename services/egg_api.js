@@ -1,7 +1,7 @@
 import { Buffer as buffer } from "node:buffer";
 
-import { api_error } from "./errors.js";
-import { create_auth_hash, decompress_message } from "./utils/tools.js";
+import { api_error } from "../api/errors.js";
+import { create_auth_hash, decompress_message } from "../utils/tools.js";
 
 const client_version = 73;
 const max_response_length = 20_000_000;
