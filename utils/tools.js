@@ -94,19 +94,17 @@ async function createAuthHash(message, env) {
 }
 
 async function decompressMessage(authMsg) {
-    const messageBytes = authMsg.getMessage_asU8();
-    if (!authMsg.getCompressed()) return messageBytes;
+	const messageBytes = authMsg.getMessage_asU8();
+	if (!authMsg.getCompressed()) return messageBytes;
 
-    try {
-        const ds = new DecompressionStream("deflate");
-        const writer = ds.writable.getWriter();
-        writer.write(messageBytes);
-        writer.close();
-        const buffer = await new Response(ds.readable).arrayBuffer();
-        return new Uint8Array(buffer);
-    } catch {
-        return messageBytes;
-    }
+	const stream = new Blob([messageBytes])
+		.stream()
+		.pipeThrough(new DecompressionStream("deflate"));
+	const decompressed = new Uint8Array(await new Response(stream).arrayBuffer());
+	if (authMsg.hasOriginalSize() && decompressed.length !== authMsg.getOriginalSize()) {
+		throw new Error("Decompressed message size did not match its metadata");
+	}
+	return decompressed;
 }
 
 export {
