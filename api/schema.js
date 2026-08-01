@@ -3,6 +3,7 @@ import { handle as active_missions } from "../handlers/active_missions.js";
 import { handle as afx_config } from "../handlers/afx_config.js";
 import { handle as archive } from "../handlers/archive.js";
 import { handle as backup } from "../handlers/backup.js";
+import { handle as colleggtibles } from "../handlers/colleggtibles.js";
 import { handle as completed_mission } from "../handlers/completed_mission.js";
 import { handle as contract } from "../handlers/contract.js";
 import { handle as coop_buffs } from "../handlers/coop_buffs.js";
@@ -39,6 +40,7 @@ const endpoints = {
 		params: ["eid", "mission_id"],
 		type: json_content_type,
 	},
+	colleggtibles: { handle: colleggtibles, params: ["eid"], type: json_content_type },
 	contract: {
 		handle: contract,
 		params: ["eid", "contract", "coop"],

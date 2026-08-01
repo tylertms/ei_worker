@@ -13,6 +13,7 @@ ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests a
 | `/afx_config`        | `eid`                         | Artifact configuration                                          |
 | `/archive`           | `eid`                         | Contract archive                                                |
 | `/backup`            | `eid`                         | Player backup                                                   |
+| `/colleggtibles`     | `eid`                         | Colleggtible progress, tiers, and buffs                          |
 | `/completed_mission` | `eid`, `mission_id`           | Completed missions                                              |
 | `/contract`          | `eid`, `contract`, `coop`     | Coop status                                                     |
 | `/coop_buffs`        | `eid`, `contract`, `coop`     | Deflector and SIAB totals as CSV                                |

@@ -75,6 +75,16 @@ const cases = [
 	},
 	{
 		content_type: "application/json",
+		fetch: async (input) =>
+			new Response(
+				String(input).endsWith("/ei/bot_first_contact")
+					? backup_payload(backup)
+					: authenticated_payload(periodicals),
+			),
+		path: "colleggtibles?eid=EI123",
+	},
+	{
+		content_type: "application/json",
 		fetch: fixed_response(authenticated_payload(new proto.CompleteMissionResponse())),
 		path: "completed_mission?eid=EI123&mission_id=mission_id",
 	},

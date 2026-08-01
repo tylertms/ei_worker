@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-
+import { build_colleggtibles } from "../handlers/colleggtibles.js";
 import { calculate_buffs } from "../handlers/coop_buffs.js";
 import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
 import { find_farm_index, get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
@@ -108,6 +108,53 @@ test("builds safe colleggtible rows when buff metadata is missing", () => {
 			image_url: "",
 			maximum_farm_size: 1_000_000_000,
 			name: "Chocolate",
+		},
+	]);
+});
+
+test("builds colleggtible progress from all availability sources", () => {
+	const backup = {
+		contracts: {
+			archiveList: [],
+			colleggtibleMaxFarmSizeReachedList: [{ eggId: "chocolate", maxFarmSizeReached: 100_000_000 }],
+			contractsList: [],
+			customEggInfoList: [],
+		},
+	};
+	const periodicals = {
+		contractPlayerInfo: {
+			colleggtibleMaxFarmSizeReachedList: [
+				{ eggId: "chocolate", maxFarmSizeReached: 1_000_000_000 },
+			],
+		},
+		contracts: {
+			customEggsList: [
+				{
+					buffsList: [
+						{ dimension: 1, value: 1.1 },
+						{ dimension: 1, value: 1.2 },
+						{ dimension: 1, value: 1.3 },
+					],
+					identifier: "chocolate",
+					name: "Chocolate",
+					value: 10,
+				},
+			],
+		},
+	};
+
+	assert.deepEqual(build_colleggtibles(backup, periodicals), [
+		{
+			buff_level: 3,
+			buff_type: "EARNINGS",
+			buff_value: 1.3,
+			egg_value: 10,
+			id: "chocolate",
+			image_url: "",
+			maximum_farm_size: 1_000_000_000,
+			name: "Chocolate",
+			next_threshold: 10_000_000_000,
+			remaining_to_next_threshold: 9_000_000_000,
 		},
 	]);
 });
