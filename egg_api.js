@@ -7,11 +7,7 @@ const client_version = 73;
 const max_response_length = 20_000_000;
 const timeout_milliseconds = 15_000;
 
-class upstream_error extends api_error {
-	constructor(status, code, message) {
-		super(status, code, message);
-	}
-}
+class upstream_error extends api_error {}
 
 function basic_request(context, eid) {
 	return new context.proto.BasicRequestInfo().setEiUserId(eid).setClientVersion(client_version);
