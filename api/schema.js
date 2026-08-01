@@ -2,6 +2,7 @@ import { handle as active_artifacts } from "../handlers/active_artifacts.js";
 import { handle as active_missions } from "../handlers/active_missions.js";
 import { handle as afx_config } from "../handlers/afx_config.js";
 import { handle as archive } from "../handlers/archive.js";
+import { handle as artifact_inventory } from "../handlers/artifact_inventory.js";
 import { handle as backup } from "../handlers/backup.js";
 import { handle as colleggtibles } from "../handlers/colleggtibles.js";
 import { handle as completed_mission } from "../handlers/completed_mission.js";
@@ -36,6 +37,7 @@ const endpoints = {
 	},
 	afx_config: { handle: afx_config, params: ["eid"], type: json_content_type },
 	archive: { handle: archive, params: ["eid"], type: json_content_type },
+	artifact_inventory: { handle: artifact_inventory, params: ["eid"], type: json_content_type },
 	backup: { handle: backup, params: ["eid"], type: json_content_type },
 	completed_mission: {
 		handle: completed_mission,

@@ -71,6 +71,11 @@ const cases = [
 	{
 		content_type: "application/json",
 		fetch: fixed_response(backup_payload(backup)),
+		path: "artifact_inventory?eid=EI123",
+	},
+	{
+		content_type: "application/json",
+		fetch: fixed_response(backup_payload(backup)),
 		path: "backup?eid=EI123",
 	},
 	{

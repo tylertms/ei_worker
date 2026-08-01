@@ -12,6 +12,7 @@ ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests a
 | `/active_missions`   | `eid`, optional `reset_index` | Active artifact missions                                        |
 | `/afx_config`        | `eid`                         | Artifact configuration                                          |
 | `/archive`           | `eid`                         | Contract archive                                                |
+| `/artifact_inventory` | `eid`                        | Artifact inventory, sets, and crafting status                   |
 | `/backup`            | `eid`                         | Player backup                                                   |
 | `/colleggtibles`     | `eid`                         | Colleggtible progress, tiers, and buffs                          |
 | `/completed_mission` | `eid`, `mission_id`           | Completed missions                                              |

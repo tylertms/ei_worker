@@ -112,6 +112,15 @@ test("retrieves and decodes the live artifact configuration", { timeout }, async
 	assert.equal(typeof configuration, "object");
 });
 
+test("retrieves the live artifact inventory", { timeout }, async () => {
+	const inventory = await get_json("artifact_inventory", { eid: test_eid });
+	assert.equal(Array.isArray(inventory.items), true);
+	assert.equal(Array.isArray(inventory.statuses), true);
+	assert.equal(Array.isArray(inventory.active_sets), true);
+	assert.equal(typeof inventory.total_quantity, "number");
+	assert.equal(Array.isArray(inventory.virtue.items), true);
+});
+
 test("retrieves and decodes the live contract archive", { timeout }, async () => {
 	const archive = await get_json("archive", { eid: test_eid });
 	assert.equal(Array.isArray(archive.archiveList), true);

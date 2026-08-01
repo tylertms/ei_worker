@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { build_artifact_inventory } from "../handlers/artifact_inventory.js";
 import { build_colleggtibles } from "../handlers/colleggtibles.js";
 import { build_contracts } from "../handlers/contracts.js";
 import { calculate_buffs } from "../handlers/coop_buffs.js";
@@ -93,6 +94,31 @@ test("maps equipped artifacts and omits empty slots", () => {
 		artifacts_database.inventoryItemsList[0],
 	]);
 	assert.deepEqual(get_active_artifacts(undefined, 0), []);
+});
+
+test("builds artifact inventory, sets, and crafting status", () => {
+	const inventory = build_artifact_inventory({
+		artifacts: { craftingXp: 12, inventoryScore: 34 },
+		artifactsDb: {
+			activeArtifactSetsList: [{ slotsList: [{ itemId: 7, occupied: true }] }],
+			artifactStatusList: [
+				{ count: 2, craftable: true, discovered: true, spec: { level: 1, name: 2 } },
+			],
+			inventoryItemsList: [
+				{ artifact: { spec: { level: 1, name: 2, rarity: 0 } }, itemId: 7, quantity: 3 },
+			],
+			itemSequence: 8,
+			savedArtifactSetsList: [],
+		},
+	});
+
+	assert.equal(inventory.inventory_score, 34);
+	assert.equal(inventory.crafting_xp, 12);
+	assert.equal(inventory.total_quantity, 3);
+	assert.equal(inventory.items[0].item_id, 7);
+	assert.equal(inventory.active_sets[0].slots[0].occupied, true);
+	assert.equal(inventory.statuses[0].craftable, true);
+	assert.deepEqual(inventory.virtue.items, []);
 });
 
 test("prefers the highest colleggtible availability value", () => {
