@@ -9,16 +9,25 @@
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
 		"format": "biome format --write .",
-		"test": "node --test"
+		"test": "node --test",
+		"update_proto": "node scripts/update_proto.js",
+		"verify_proto": "node scripts/update_proto.js --check"
 	},
 	"dependencies": {
 		"google-protobuf": "3.21.4"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.6",
+		"protoc": "35.1.0",
+		"protoc-gen-js": "3.21.4-4",
 		"wrangler": "4.118.0"
 	},
 	"engines": {
 		"node": ">=22"
+	},
+	"overrides": {
+		"protoc-gen-js": {
+			"adm-zip": "0.6.0"
+		}
 	}
 }
