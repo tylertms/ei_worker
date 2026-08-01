@@ -5,6 +5,7 @@ import { handle as archive } from "../handlers/archive.js";
 import { handle as artifact_inventory } from "../handlers/artifact_inventory.js";
 import { handle as backup } from "../handlers/backup.js";
 import { handle as colleggtibles } from "../handlers/colleggtibles.js";
+import { handle as completed_mission } from "../handlers/completed_mission.js";
 import { handle as contract } from "../handlers/contract.js";
 import { handle as contract_evaluations } from "../handlers/contract_evaluations.js";
 import { handle as contracts } from "../handlers/contracts.js";
@@ -42,6 +43,11 @@ const endpoints = {
 	artifact_inventory: { handle: artifact_inventory, params: ["eid"], type: json_content_type },
 	backup: { handle: backup, params: ["eid"], type: json_content_type },
 	colleggtibles: { handle: colleggtibles, params: ["eid"], type: json_content_type },
+	completed_mission: {
+		handle: completed_mission,
+		params: ["eid", "mission_id"],
+		type: json_content_type,
+	},
 	contract: {
 		handle: contract,
 		params: ["eid", "contract", "coop"],
@@ -85,6 +91,7 @@ const parameter_rules = {
 	coop: { max_length: 128 },
 	eid: { aliases: ["EID"], max_length: 64, min_length: 3, pattern: /^[A-Za-z0-9_-]+$/ },
 	grade: { integer: true, max: 5, min: 0 },
+	mission_id: { aliases: ["id"], max_length: 128 },
 	reset_index: { aliases: ["resetIndex"], integer: true, max: 1_000_000_000, min: 0 },
 	scope: { max_length: 64, pattern: /^[A-Za-z0-9_-]+$/ },
 };
