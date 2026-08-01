@@ -1,22 +1,22 @@
 import assert from "node:assert/strict";
-import { Buffer } from "node:buffer";
+import { Buffer as buffer } from "node:buffer";
 import test from "node:test";
 
 import proto from "../ei_pb.cjs";
 import { handle_request } from "../index.js";
 
-async function withFetch(responseBody, run) {
-	const originalFetch = globalThis.fetch;
-	globalThis.fetch = async () => new Response(responseBody);
+async function with_fetch(response_body, run) {
+	const original_fetch = globalThis.fetch;
+	globalThis.fetch = async () => new Response(response_body);
 	try {
 		return await run();
 	} finally {
-		globalThis.fetch = originalFetch;
+		globalThis.fetch = original_fetch;
 	}
 }
 
 test("preserves endpoint status and adds public headers", async () => {
-	const response = await withFetch("invalid protobuf", () =>
+	const response = await with_fetch("invalid protobuf", () =>
 		handle_request(new Request("https://worker.example/backup?eid=EI123")),
 	);
 
@@ -29,19 +29,19 @@ test("preserves endpoint status and adds public headers", async () => {
 });
 
 test("translates upstream HTTP failures to a public gateway error", async () => {
-	const originalFetch = globalThis.fetch;
+	const original_fetch = globalThis.fetch;
 	globalThis.fetch = async () => new Response(null, { status: 503 });
 	try {
 		const response = await handle_request(new Request("https://worker.example/backup?eid=EI123"));
 		assert.equal(response.status, 502);
 		assert.equal((await response.json()).error.code, "upstream_error");
 	} finally {
-		globalThis.fetch = originalFetch;
+		globalThis.fetch = original_fetch;
 	}
 });
 
 test("handles preflight without calling the endpoint", async () => {
-	const originalFetch = globalThis.fetch;
+	const original_fetch = globalThis.fetch;
 	let calls = 0;
 	globalThis.fetch = async () => {
 		calls += 1;
@@ -55,7 +55,7 @@ test("handles preflight without calling the endpoint", async () => {
 		assert.equal(response.headers.get("Access-Control-Allow-Methods"), "GET, OPTIONS");
 		assert.equal(calls, 0);
 	} finally {
-		globalThis.fetch = originalFetch;
+		globalThis.fetch = original_fetch;
 	}
 });
 
@@ -69,9 +69,9 @@ test("rejects methods other than GET and OPTIONS", async () => {
 });
 
 test("maps legacy parameter names and advertises the canonical URL", async () => {
-	const firstContact = new proto.EggIncFirstContactResponse().setBackup(new proto.Backup());
-	const payload = Buffer.from(firstContact.serializeBinary()).toString("base64");
-	const response = await withFetch(payload, () =>
+	const first_contact = new proto.EggIncFirstContactResponse().setBackup(new proto.Backup());
+	const payload = buffer.from(first_contact.serializeBinary()).toString("base64");
+	const response = await with_fetch(payload, () =>
 		handle_request(new Request("https://worker.example/backup?EID=EI123")),
 	);
 
@@ -90,8 +90,8 @@ test("maps legacy endpoint names", async () => {
 	const archive = new proto.ContractsArchive();
 	archive.addArchive(local_contract);
 	const authenticated = new proto.AuthenticatedMessage().setMessage(archive.serializeBinary());
-	const payload = Buffer.from(authenticated.serializeBinary()).toString("base64");
-	const response = await withFetch(payload, () =>
+	const payload = buffer.from(authenticated.serializeBinary()).toString("base64");
+	const response = await with_fetch(payload, () =>
 		handle_request(new Request("https://worker.example/minmaxCxPChange?EID=EI123")),
 	);
 

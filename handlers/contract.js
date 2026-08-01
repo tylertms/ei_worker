@@ -7,7 +7,12 @@ async function get_contract(context) {
 		.setCoopIdentifier(coop)
 		.setUserId(eid)
 		.setRinfo(basic_request(context, eid));
-	return post_message(context, "/ei/coop_status", request, context.proto.ContractCoopStatusResponse);
+	return post_message(
+		context,
+		"/ei/coop_status",
+		request,
+		context.proto.ContractCoopStatusResponse,
+	);
 }
 
 async function handle(_request, context) {

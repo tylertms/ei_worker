@@ -1,7 +1,7 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.5.6/schema.json",
 	"files": {
-		"includes": ["**", "!ei_pb.js", "!dist"]
+		"includes": ["**", "!ei_pb.cjs", "!dist"]
 	},
 	"formatter": {
 		"enabled": true,
