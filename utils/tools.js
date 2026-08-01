@@ -1,4 +1,5 @@
 import proto from "../ei_pb.cjs";
+import { api_error } from "../errors.js";
 
 const suffixes = {
 	0: "",
@@ -99,12 +100,28 @@ function get_artifact_name(number) {
 }
 
 async function create_auth_hash(message, env) {
-	const magic = env.MAGIC;
+	const magic = env?.MAGIC;
+	const index = Number(env?.INDEX);
+	const marker = Number(env?.MARKER);
+	if (
+		typeof magic !== "string" ||
+		magic.length === 0 ||
+		!Number.isSafeInteger(index) ||
+		index < 0 ||
+		!Number.isInteger(marker) ||
+		marker < 0 ||
+		marker > 255
+	) {
+		throw new api_error(500, "configuration_error", "Worker authentication is not configured");
+	}
+	if (!(message instanceof Uint8Array) || message.length === 0) {
+		throw new api_error(500, "invalid_auth_message", "Cannot authenticate an empty message");
+	}
 	const data = new Uint8Array(message.length + magic.length);
 	data.set(message, 0);
-	data[env.INDEX % message.length] = env.MARKER;
-	for (let index = 0; index < magic.length; index += 1) {
-		data[message.length + index] = magic.charCodeAt(index);
+	data[index % message.length] = marker;
+	for (let offset = 0; offset < magic.length; offset += 1) {
+		data[message.length + offset] = magic.charCodeAt(offset);
 	}
 	const hash_buffer = await crypto.subtle.digest("SHA-256", data.buffer);
 	return Array.from(new Uint8Array(hash_buffer))
