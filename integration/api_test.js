@@ -209,6 +209,20 @@ test("calculates live coop buffs", { timeout }, async () => {
 	assert.match(await response.text(), /^deflector,\d+\nsiab,\d+$/);
 });
 
+test("retrieves a live coop summary", { timeout }, async () => {
+	const active_coop = find_active_coop(await get_backup());
+	const summary = await get_json("coop_summary", {
+		contract: active_coop.contract.identifier,
+		coop: active_coop.coopIdentifier,
+		eid: test_eid,
+	});
+	assert.equal(Array.isArray(summary.members), true);
+	for (const member of summary.members) {
+		assert.equal(typeof member.rank, "number");
+		assert.equal(typeof member.buffs.deflector_percent, "number");
+	}
+});
+
 test("retrieves live active missions", { timeout }, async () => {
 	const backup = await get_backup();
 	const missions = await get_json("active_missions", {

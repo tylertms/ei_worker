@@ -10,6 +10,7 @@ import { handle as contract } from "../handlers/contract.js";
 import { handle as contract_evaluations } from "../handlers/contract_evaluations.js";
 import { handle as contracts } from "../handlers/contracts.js";
 import { handle as coop_buffs } from "../handlers/coop_buffs.js";
+import { handle as coop_summary } from "../handlers/coop_summary.js";
 import { handle as farms } from "../handlers/farms.js";
 import { handle as leaderboard } from "../handlers/leaderboard.js";
 import { handle as leaderboard_info } from "../handlers/leaderboard_info.js";
@@ -59,6 +60,11 @@ const endpoints = {
 	},
 	contracts: { handle: contracts, params: ["eid"], type: json_content_type },
 	coop_buffs: { handle: coop_buffs, params: ["eid", "contract", "coop"], type: csv_content_type },
+	coop_summary: {
+		handle: coop_summary,
+		params: ["eid", "contract", "coop"],
+		type: json_content_type,
+	},
 	farms: { handle: farms, params: ["eid"], type: json_content_type },
 	leaderboard: {
 		handle: leaderboard,

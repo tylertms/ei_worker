@@ -5,6 +5,7 @@ import { build_colleggtibles } from "../handlers/colleggtibles.js";
 import { build_contract_evaluations } from "../handlers/contract_evaluations.js";
 import { build_contracts } from "../handlers/contracts.js";
 import { calculate_buffs } from "../handlers/coop_buffs.js";
+import { build_coop_summary } from "../handlers/coop_summary.js";
 import { build_farms } from "../handlers/farms.js";
 import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
 import { build_missions } from "../handlers/missions.js";
@@ -35,6 +36,30 @@ test("ignores contributors without buff history", () => {
 		deflector: 0,
 		siab: 0,
 	});
+});
+
+test("ranks coop members and reports their current buffs", () => {
+	const summary = build_coop_summary({
+		contractIdentifier: "contract_id",
+		contributorsList: [
+			{ contributionAmount: 5, userName: "Second" },
+			{
+				buffHistoryList: [{ earnings: 1.2, eggLayingRate: 1.1 }],
+				contributionAmount: 10,
+				productionParams: { farmPopulation: 12 },
+				userName: "First",
+			},
+		],
+		coopIdentifier: "coop_id",
+		grade: 5,
+	});
+
+	assert.equal(summary.contract_id, "contract_id");
+	assert.equal(summary.grade.name, "AAA");
+	assert.equal(summary.members[0].user_name, "First");
+	assert.equal(summary.members[0].rank, 1);
+	assert.equal(summary.members[0].buffs.deflector_percent, 10);
+	assert.equal(summary.members[0].production.farm_population, 12);
 });
 
 test("selects report farms with their source indexes", () => {

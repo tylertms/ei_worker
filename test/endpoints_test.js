@@ -125,6 +125,11 @@ const cases = [
 	},
 	{
 		content_type: "application/json",
+		fetch: fixed_response(authenticated_payload(new proto.ContractCoopStatusResponse())),
+		path: "coop_summary?eid=EI123&contract=contract_id&coop=coop_id",
+	},
+	{
+		content_type: "application/json",
 		fetch: fixed_response(backup_payload(backup)),
 		path: "farms?eid=EI123",
 	},
