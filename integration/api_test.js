@@ -80,15 +80,6 @@ test("retrieves and decodes a live backup", { timeout }, async () => {
 	assert.equal(Array.isArray(backup.farmsList), true);
 });
 
-test("rejects a nonexistent completed mission safely", { timeout }, async () => {
-	const response = await get_live_response("completed_mission", {
-		eid: test_eid,
-		mission_id: "integration_test_missing_mission",
-	});
-	assert.equal([502, 504].includes(response.status), true);
-	assert.match((await response.json()).error.code, /^upstream_(error|timeout)$/);
-});
-
 test("retrieves live active artifacts", { timeout }, async () => {
 	const artifacts = await get_json("active_artifacts", { eid: test_eid });
 	assert.equal(Array.isArray(artifacts), true);

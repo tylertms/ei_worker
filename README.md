@@ -15,7 +15,6 @@ ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests a
 | `/artifact_inventory` | `eid`                        | Artifact inventory, sets, and crafting status                   |
 | `/backup`            | `eid`                         | Player backup                                                   |
 | `/colleggtibles`     | `eid`                         | Colleggtible progress, tiers, and buffs                          |
-| `/completed_mission` | `eid`, `mission_id`           | Completed missions                                              |
 | `/contract`          | `eid`, `contract`, `coop`     | Coop status                                                     |
 | `/contract_evaluations` | `eid`                      | Contract evaluation history and XP summary                      |
 | `/contracts`         | `eid`                         | Active, available, and completed contract summaries             |
@@ -39,7 +38,6 @@ Examples:
 /backup?eid=EI1234567890123456
 /active_artifacts?eid=EI1234567890123456&contract=contract_id
 /contract?eid=EI1234567890123456&contract=contract_id&coop=coop_name
-/completed_mission?eid=EI1234567890123456&mission_id=mission_identifier
 /leaderboard?eid=EI1234567890123456&scope=ALL_TIME&grade=5
 /active_missions?eid=EI1234567890123456&reset_index=12
 ```
@@ -94,7 +92,7 @@ Live API tests are opt-in and read the private test account identifier from `.en
 npm run test_integration
 ```
 
-The live suite exercises every endpoint against Egg, Inc. Contract and coop identifiers are taken from the test account when available, with guaranteed nonexistent identifiers used otherwise. The completed mission check also uses a guaranteed nonexistent identifier so it cannot collect or change a real mission. The suite does not include the EID or returned account data in test output or tracked files.
+The live suite exercises every endpoint against Egg, Inc. Contract and coop identifiers are taken from the test account when available, with guaranteed nonexistent identifiers used otherwise. The suite does not include the EID or returned account data in test output or tracked files.
 
 Deploy with:
 

@@ -90,11 +90,6 @@ const cases = [
 	},
 	{
 		content_type: "application/json",
-		fetch: fixed_response(authenticated_payload(new proto.CompleteMissionResponse())),
-		path: "completed_mission?eid=EI123&mission_id=mission_id",
-	},
-	{
-		content_type: "application/json",
 		fetch: fixed_response(authenticated_payload(new proto.ContractCoopStatusResponse())),
 		path: "contract?eid=EI123&contract=contract_id&coop=coop_id",
 	},
