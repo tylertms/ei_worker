@@ -1,49 +1,25 @@
-import { handle as handle_coop_status } from "./contract.js";
+import { get_contract } from "./contract.js";
 
-async function handle(request, context) {
-	try {
-		const coopStatus = JSON.parse(
-			await (await handle_coop_status(request, context)).text()
-		);
-		const { eid: EID } = context.params;
+function calculate_buffs(contributors, eid) {
+	let deflector = 0;
+	let siab = 0;
 
-		let deflectorBuff = 0;
-		let siabBuff = 0;
-
-		for (const user of coopStatus.contributorsList) {
-			if (user.userId === EID) {
-				continue;
-			}
-
-			const buffHistory = user.buffHistoryList;
-			if (Array.isArray(buffHistory) && buffHistory.length > 0) {
-				const currentBuff = buffHistory[buffHistory.length - 1];
-
-				const currentDeflectorBuff =
-					currentBuff && typeof currentBuff.eggLayingRate === "number"
-						? (currentBuff.eggLayingRate - 1) * 100
-						: 0;
-
-				const currentSiabBuff =
-					currentBuff && typeof currentBuff.earnings === "number"
-						? (currentBuff.earnings - 1) * 100
-						: 0;
-
-				deflectorBuff += Math.round(currentDeflectorBuff);
-				siabBuff += Math.round(currentSiabBuff);
-			}
-		}
-
-		const responseText = `deflector,${deflectorBuff}\nsiab,${siabBuff}`;
-
-		return new Response(responseText, {
-			headers: { "Content-Type": "text/csv" },
-		});
-	} catch (error) {
-		return new Response(JSON.stringify({ error: error.message }), {
-			status: 500,
-		});
+	for (const contributor of contributors) {
+		if (contributor.userId === eid) continue;
+		const history = contributor.buffHistoryList ?? [];
+		const current = history.at(-1);
+		if (!current) continue;
+		deflector += typeof current.eggLayingRate === "number" ? (current.eggLayingRate - 1) * 100 : 0;
+		siab += typeof current.earnings === "number" ? (current.earnings - 1) * 100 : 0;
 	}
+
+	return { deflector: Math.round(deflector), siab: Math.round(siab) };
 }
 
-export { handle };
+async function handle(_request, context) {
+	const contract = (await get_contract(context)).toObject();
+	const buffs = calculate_buffs(contract.contributorsList ?? [], context.params.eid);
+	return new Response(`deflector,${buffs.deflector}\nsiab,${buffs.siab}`);
+}
+
+export { calculate_buffs, handle };
