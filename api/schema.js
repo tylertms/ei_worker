@@ -7,6 +7,7 @@ import { handle as colleggtibles } from "../handlers/colleggtibles.js";
 import { handle as completed_mission } from "../handlers/completed_mission.js";
 import { handle as contract } from "../handlers/contract.js";
 import { handle as coop_buffs } from "../handlers/coop_buffs.js";
+import { handle as farms } from "../handlers/farms.js";
 import { handle as leaderboard } from "../handlers/leaderboard.js";
 import { handle as leaderboard_info } from "../handlers/leaderboard_info.js";
 import { handle as minmax_cxp_change } from "../handlers/minmax_cxp_change.js";
@@ -47,6 +48,7 @@ const endpoints = {
 		type: json_content_type,
 	},
 	coop_buffs: { handle: coop_buffs, params: ["eid", "contract", "coop"], type: csv_content_type },
+	farms: { handle: farms, params: ["eid"], type: json_content_type },
 	leaderboard: {
 		handle: leaderboard,
 		params: ["eid", "scope", "grade"],

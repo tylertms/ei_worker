@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { build_colleggtibles } from "../handlers/colleggtibles.js";
 import { calculate_buffs } from "../handlers/coop_buffs.js";
+import { build_farms } from "../handlers/farms.js";
 import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
 import { find_farm_index, get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
 import { get_colleggtible_rows, get_maximum_farm_sizes } from "../utils/colleggtibles.js";
@@ -46,6 +47,35 @@ test("selects report farms with their source indexes", () => {
 	assert.equal(find_farm_index(farms), 1);
 	assert.equal(find_farm_index(farms, "active"), 2);
 	assert.equal(find_farm_index(farms, "missing"), -1);
+});
+
+test("builds structured home and contract farms", () => {
+	const farms = build_farms({
+		artifactsDb: { activeArtifactSetsList: [], inventoryItemsList: [] },
+		contracts: {
+			archiveList: [],
+			contractsList: [{ contractIdentifier: "contract_id", coopIdentifier: "coop_id" }],
+		},
+		farmsList: [
+			{ cashEarned: 10, cashSpent: 3, eggType: 1, farmType: 2, numChickens: 4 },
+			{
+				boostTokensGiven: 1,
+				boostTokensReceived: 5,
+				boostTokensSpent: 2,
+				contractId: "contract_id",
+				eggType: 200,
+				farmType: 3,
+			},
+		],
+	});
+
+	assert.equal(farms[0].type, "HOME");
+	assert.equal(farms[0].cash.net, 7);
+	assert.equal(farms[0].tokens, null);
+	assert.equal(farms[1].contract_id, "contract_id");
+	assert.equal(farms[1].coop_id, "coop_id");
+	assert.equal(farms[1].egg.name, "contract_id");
+	assert.equal(farms[1].tokens.balance, 2);
 });
 
 test("maps equipped artifacts and omits empty slots", () => {

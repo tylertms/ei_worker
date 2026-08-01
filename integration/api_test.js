@@ -94,6 +94,19 @@ test("retrieves live active artifacts", { timeout }, async () => {
 	assert.equal(Array.isArray(artifacts), true);
 });
 
+test("retrieves structured live farms", { timeout }, async () => {
+	const farms = await get_json("farms", { eid: test_eid });
+	assert.equal(Array.isArray(farms), true);
+	assert.equal(
+		farms.some((farm) => farm.type === "HOME"),
+		true,
+	);
+	for (const farm of farms) {
+		assert.equal(typeof farm.population.total, "number");
+		assert.equal(Array.isArray(farm.equipped_artifacts), true);
+	}
+});
+
 test("retrieves and decodes the live artifact configuration", { timeout }, async () => {
 	const configuration = await get_json("afx_config", { eid: test_eid });
 	assert.equal(typeof configuration, "object");

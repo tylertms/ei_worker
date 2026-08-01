@@ -55,7 +55,7 @@ function require_report_data(backup, periodicals) {
 
 function get_farm_egg_name(farm, contracts) {
 	const egg_name = get_egg_name(farm.eggType);
-	if (egg_name !== "CUSTOM") return egg_name;
+	if (egg_name !== "CUSTOM" && egg_name !== "CUSTOM_EGG") return egg_name;
 	const matching_contract = contracts.find(
 		(local_contract) => local_contract.contract?.identifier === farm.contractId,
 	);
