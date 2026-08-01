@@ -6,7 +6,7 @@ import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
 import { find_farm_index, get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
 import { get_colleggtible_rows, get_maximum_farm_sizes } from "../utils/colleggtibles.js";
 
-test("calculates current coop buffs without cumulative rounding error", () => {
+test("aggregates fractional coop buffs before rounding", () => {
 	const contributors = [
 		{
 			buffHistoryList: [{ earnings: 1.004, eggLayingRate: 1.004 }],
@@ -32,7 +32,7 @@ test("ignores contributors without buff history", () => {
 	});
 });
 
-test("preserves original farm indexes when report farms are filtered", () => {
+test("selects report farms with their source indexes", () => {
 	const farms = [
 		{ contractId: "inactive", farmType: 3 },
 		{ farmType: 2 },
