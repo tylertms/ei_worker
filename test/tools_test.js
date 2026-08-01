@@ -1,26 +1,26 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { decompressMessage } from "../utils/tools.js";
+import { decompress_message } from "../utils/tools.js";
 
 async function compress(bytes) {
 	const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream("deflate"));
 	return new Uint8Array(await new Response(stream).arrayBuffer());
 }
 
-function authenticatedMessage(message, originalSize) {
+function authenticated_message(message, original_size) {
 	return {
 		getCompressed: () => true,
 		getMessage_asU8: () => message,
-		getOriginalSize: () => originalSize,
-		hasOriginalSize: () => originalSize !== undefined,
+		getOriginalSize: () => original_size,
+		hasOriginalSize: () => original_size !== undefined,
 	};
 }
 
 test("decompresses authenticated messages", async () => {
 	const original = new TextEncoder().encode("compressed protobuf payload");
 	const compressed = await compress(original);
-	const decompressed = await decompressMessage(authenticatedMessage(compressed, original.length));
+	const decompressed = await decompress_message(authenticated_message(compressed, original.length));
 
 	assert.deepEqual(decompressed, original);
 });
@@ -32,19 +32,19 @@ test("returns uncompressed authenticated messages unchanged", async () => {
 		getMessage_asU8: () => original,
 	};
 
-	assert.equal(await decompressMessage(message), original);
+	assert.equal(await decompress_message(message), original);
 });
 
 test("rejects invalid compressed data", async () => {
-	const message = authenticatedMessage(new Uint8Array([1, 2, 3]));
-	await assert.rejects(decompressMessage(message));
+	const message = authenticated_message(new Uint8Array([1, 2, 3]));
+	await assert.rejects(decompress_message(message));
 });
 
 test("rejects decompressed data with the wrong declared size", async () => {
 	const original = new TextEncoder().encode("payload");
 	const compressed = await compress(original);
 	await assert.rejects(
-		decompressMessage(authenticatedMessage(compressed, original.length + 1)),
+		decompress_message(authenticated_message(compressed, original.length + 1)),
 		/size did not match/,
 	);
 });

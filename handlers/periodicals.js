@@ -1,10 +1,10 @@
-import { clientVersion, postMessage } from "../egg-api.js";
+import { client_version, post_message } from "../egg_api.js";
 
 async function handle(_request, context) {
 	const request = new context.proto.GetPeriodicalsRequest()
 		.setUserId(context.params.eid)
-		.setCurrentClientVersion(clientVersion);
-	const response = await postMessage(
+		.setCurrentClientVersion(client_version);
+	const response = await post_message(
 		context,
 		"/ei/get_periodicals",
 		request,

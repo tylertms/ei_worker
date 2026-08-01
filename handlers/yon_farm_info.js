@@ -1,20 +1,20 @@
 import {
-	bigNumberToString,
-	convertGrade,
-	getEggName,
-	getDimension,
-	getBuffLevel,
-	getArtifactName,
-	getArtifactRarity,
-	getArtifactLevel,
+	big_number_to_string,
+	convert_grade,
+	get_artifact_level,
+	get_artifact_name,
+	get_artifact_rarity,
+	get_buff_level,
+	get_dimension,
+	get_egg_name,
 } from "../utils/tools.js";
-import { handle as handleBackup } from "./backup.js";
-import { handle as handlePeriodicals } from "./periodicals.js";
+import { handle as handle_backup } from "./backup.js";
+import { handle as handle_periodicals } from "./periodicals.js";
 
 async function handle(request, context) {
 	try {
-		const backup = JSON.parse(await (await handleBackup(request, context)).text());
-		const periodicals = JSON.parse(await (await handlePeriodicals(request, context)).text());
+		const backup = JSON.parse(await (await handle_backup(request, context)).text());
+		const periodicals = JSON.parse(await (await handle_periodicals(request, context)).text());
 		let csv = "";
 
 		const contractsArchiveList = backup.contracts.archiveList;
@@ -27,7 +27,7 @@ async function handle(request, context) {
 		}
 		csv = csv.slice(0, -1) + "\n";
 
-		csv += bigNumberToString(backup.game.soulEggsD, 3) + "," + backup.game.eggsOfProphecy + "," + convertGrade(backup.contracts.lastCpi.grade) + "," + backup.game.permitLevel + ",";
+		csv += big_number_to_string(backup.game.soulEggsD, 3) + "," + backup.game.eggsOfProphecy + "," + convert_grade(backup.contracts.lastCpi.grade) + "," + backup.game.permitLevel + ",";
 		for (let i = 0; i < backup.game.epicResearchList.length; i++) {
 			csv += backup.game.epicResearchList[i].level + ",";
 		}
@@ -57,7 +57,7 @@ async function handle(request, context) {
 		});
 		csv = csv.slice(0, -1) + "\nEgg,";
 		backup.farmsList.forEach(farm => {
-			let eggName = getEggName(farm.eggType)
+			let eggName = get_egg_name(farm.eggType)
 			if (eggName === "CUSTOM") {
 				let matchingContract = combinedContractsList.find(contract => contract.contract.identifier === farm.contractId).contract
 				if (matchingContract) {
@@ -76,7 +76,7 @@ async function handle(request, context) {
 		});
 		csv = csv.slice(0, -1) + "\nCash,";
 		backup.farmsList.forEach(farm => {
-			csv += bigNumberToString(farm.cashEarned - farm.cashSpent, 3) + ",";
+			csv += big_number_to_string(farm.cashEarned - farm.cashSpent, 3) + ",";
 		})
 
 		// Not a very neat implementation (compared to Tiller's work in this file), but it works ;)
@@ -106,12 +106,12 @@ async function handle(request, context) {
 			for (let artifact of mappedArtis) {
 				if (!artifact) continue; // For empty slots (no artifact(s) equipped)
 				artifact = artifact.artifact;
-				const artifactName = getArtifactName(artifact.spec.name);
-				const artifactRarity = getArtifactRarity(artifact.spec.rarity);
-				const artifactLevel = getArtifactLevel(artifact.spec.level);
+				const artifactName = get_artifact_name(artifact.spec.name);
+				const artifactRarity = get_artifact_rarity(artifact.spec.rarity);
+				const artifactLevel = get_artifact_level(artifact.spec.level);
 				let stones = "";
 				for (const stone of artifact.stonesList) {
-					const stoneName = getArtifactName(stone.name);
+					const stoneName = get_artifact_name(stone.name);
 					const stoneLevel = parseInt(stone.level) + 2;
 					stones += stoneName + "_" + stoneLevel + ",";
 				}
@@ -184,7 +184,7 @@ async function handle(request, context) {
 			const customEggId = customEgg.identifier
 			const maxFarmReachedValues = groupedByCustomEggId[customEggId]?.map(contract => contract.maxFarmReached) || [0];;
 			const maxFarmReached = Math.max(...maxFarmReachedValues);
-			const buffLevel = getBuffLevel(maxFarmReached);
+			const buffLevel = get_buff_level(maxFarmReached);
 
 			const buffsList = customEgg.buffsList;
 			const index = Math.min(buffsList.length - 1, buffLevel - 1); // Cap index at the last element if buffLevel exceeds bounds
@@ -192,7 +192,7 @@ async function handle(request, context) {
 			const dimension = buffsList[0].dimension || 0;
 			const buffValue = buff ? buff.value : 1
 
-			const buffType = getDimension(dimension);
+			const buffType = get_dimension(dimension);
 			const eggImageLink = customEgg.icon.url
 
 			colleggtiblesSection += `${customEggId},${buffType},${buffValue},${eggImageLink},${customEgg.value},${customEgg.name}\n`;

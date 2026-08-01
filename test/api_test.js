@@ -3,7 +3,7 @@ import { Buffer } from "node:buffer";
 import test from "node:test";
 
 import proto from "../ei_pb.cjs";
-import { handleRequest } from "../index.js";
+import { handle_request } from "../index.js";
 
 async function withFetch(responseBody, run) {
 	const originalFetch = globalThis.fetch;
@@ -17,7 +17,7 @@ async function withFetch(responseBody, run) {
 
 test("preserves endpoint status and adds public headers", async () => {
 	const response = await withFetch("invalid protobuf", () =>
-		handleRequest(new Request("https://worker.example/backup?eid=EI123")),
+		handle_request(new Request("https://worker.example/backup?eid=EI123")),
 	);
 
 	assert.equal(response.status, 502);
@@ -32,7 +32,7 @@ test("translates upstream HTTP failures to a public gateway error", async () => 
 	const originalFetch = globalThis.fetch;
 	globalThis.fetch = async () => new Response(null, { status: 503 });
 	try {
-		const response = await handleRequest(new Request("https://worker.example/backup?eid=EI123"));
+		const response = await handle_request(new Request("https://worker.example/backup?eid=EI123"));
 		assert.equal(response.status, 502);
 		assert.equal((await response.json()).error.code, "upstream_error");
 	} finally {
@@ -48,7 +48,7 @@ test("handles preflight without calling the endpoint", async () => {
 		return new Response();
 	};
 	try {
-		const response = await handleRequest(
+		const response = await handle_request(
 			new Request("https://worker.example/backup?eid=EI123", { method: "OPTIONS" }),
 		);
 		assert.equal(response.status, 204);
@@ -60,7 +60,7 @@ test("handles preflight without calling the endpoint", async () => {
 });
 
 test("rejects methods other than GET and OPTIONS", async () => {
-	const response = await handleRequest(
+	const response = await handle_request(
 		new Request("https://worker.example/backup?eid=EI123", { method: "POST" }),
 	);
 
@@ -72,7 +72,7 @@ test("maps legacy parameter names and advertises the canonical URL", async () =>
 	const firstContact = new proto.EggIncFirstContactResponse().setBackup(new proto.Backup());
 	const payload = Buffer.from(firstContact.serializeBinary()).toString("base64");
 	const response = await withFetch(payload, () =>
-		handleRequest(new Request("https://worker.example/backup?EID=EI123")),
+		handle_request(new Request("https://worker.example/backup?EID=EI123")),
 	);
 
 	assert.equal(response.status, 200);
@@ -88,7 +88,7 @@ test("maps legacy endpoint names", async () => {
 	const authenticated = new proto.AuthenticatedMessage().setMessage(archive.serializeBinary());
 	const payload = Buffer.from(authenticated.serializeBinary()).toString("base64");
 	const response = await withFetch(payload, () =>
-		handleRequest(new Request("https://worker.example/minmaxCxPChange?EID=EI123")),
+		handle_request(new Request("https://worker.example/minmaxCxPChange?EID=EI123")),
 	);
 
 	assert.equal(response.status, 200);
@@ -105,14 +105,14 @@ test("rejects missing, unknown, conflicting, and out-of-range parameters", async
 	];
 
 	for (const request of requests) {
-		const response = await handleRequest(new Request(request));
+		const response = await handle_request(new Request(request));
 		assert.equal(response.status, 400);
 		assert.equal(response.headers.get("Access-Control-Allow-Origin"), "*");
 	}
 });
 
 test("returns a structured public error for unknown endpoints", async () => {
-	const response = await handleRequest(new Request("https://worker.example/missing"));
+	const response = await handle_request(new Request("https://worker.example/missing"));
 
 	assert.equal(response.status, 404);
 	assert.deepEqual(await response.json(), {

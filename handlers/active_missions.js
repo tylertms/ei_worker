@@ -1,19 +1,19 @@
-import { basicRequest, getBackup, postMessage, signedRequest } from "../egg-api.js";
+import { basic_request, get_backup, post_message, signed_request } from "../egg_api.js";
 
 async function handle(_request, context) {
-	const { eid, reset_index: requestedResetIndex } = context.params;
-	let resetIndex = requestedResetIndex;
+	const { eid, reset_index: requested_reset_index } = context.params;
+	let reset_index = requested_reset_index;
 
-	if (resetIndex === undefined) {
-		const backup = await getBackup(context, eid);
-		resetIndex = backup.hasVirtue() ? backup.getVirtue().getResets() : 0;
+	if (reset_index === undefined) {
+		const backup = await get_backup(context, eid);
+		reset_index = backup.hasVirtue() ? backup.getVirtue().getResets() : 0;
 	}
 
 	const request = new context.proto.GetActiveMissionsRequest()
-		.setRinfo(basicRequest(context, eid))
-		.setResetIndex(resetIndex);
-	const authenticated = await signedRequest(context, request);
-	const response = await postMessage(
+		.setRinfo(basic_request(context, eid))
+		.setResetIndex(reset_index);
+	const authenticated = await signed_request(context, request);
+	const response = await post_message(
 		context,
 		"/ei_afx/get_active_missions_v2",
 		authenticated,

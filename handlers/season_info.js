@@ -1,7 +1,7 @@
-import { postMessage } from "../egg-api.js";
+import { post_message } from "../egg_api.js";
 
 async function handle(_request, context) {
-	const response = await postMessage(
+	const response = await post_message(
 		context,
 		"/ei_ctx/get_season_infos_v2",
 		undefined,

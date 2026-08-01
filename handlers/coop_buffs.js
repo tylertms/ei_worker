@@ -1,9 +1,9 @@
-import { handle as handleCoopStatus } from "./contract.js";
+import { handle as handle_coop_status } from "./contract.js";
 
 async function handle(request, context) {
 	try {
 		const coopStatus = JSON.parse(
-			await (await handleCoopStatus(request, context)).text()
+			await (await handle_coop_status(request, context)).text()
 		);
 		const { eid: EID } = context.params;
 

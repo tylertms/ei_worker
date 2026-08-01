@@ -1,13 +1,13 @@
-import { basicRequest, postMessage, signedRequest } from "../egg-api.js";
+import { basic_request, post_message, signed_request } from "../egg_api.js";
 
 async function handle(_request, context) {
 	const { eid, grade, scope } = context.params;
 	const request = new context.proto.LeaderboardRequest()
-		.setRinfo(basicRequest(context, eid))
+		.setRinfo(basic_request(context, eid))
 		.setScope(scope)
 		.setGrade(grade);
-	const authenticated = await signedRequest(context, request);
-	const response = await postMessage(
+	const authenticated = await signed_request(context, request);
+	const response = await post_message(
 		context,
 		"/ei_ctx/get_leaderboard",
 		authenticated,

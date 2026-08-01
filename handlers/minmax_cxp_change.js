@@ -1,7 +1,7 @@
-import { getArchive } from "./archive.js";
+import { get_archive } from "./archive.js";
 
 async function handle(_request, context) {
-	const archive = (await getArchive(context)).toObject().archiveList;
+	const archive = (await get_archive(context)).toObject().archiveList;
 	let maximum = { contract: null, value: -Infinity };
 	let minimum = { contract: null, value: Infinity };
 

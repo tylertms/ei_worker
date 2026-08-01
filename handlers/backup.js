@@ -1,7 +1,7 @@
-import { getBackup } from "../egg-api.js";
+import { get_backup } from "../egg_api.js";
 
 async function handle(_request, context) {
-	const backup = await getBackup(context, context.params.eid);
+	const backup = await get_backup(context, context.params.eid);
 	return new Response(JSON.stringify(backup.toObject()));
 }
 

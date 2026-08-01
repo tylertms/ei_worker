@@ -1,10 +1,10 @@
-import { basicRequest, postMessage } from "../egg-api.js";
+import { basic_request, post_message } from "../egg_api.js";
 
 async function handle(_request, context) {
 	const request = new context.proto.ArtifactsConfigurationRequest().setRinfo(
-		basicRequest(context, context.params.eid),
+		basic_request(context, context.params.eid),
 	);
-	const response = await postMessage(
+	const response = await post_message(
 		context,
 		"/ei_afx/config",
 		request,

@@ -1,17 +1,17 @@
-import { basicRequest, postMessage } from "../egg-api.js";
+import { basic_request, post_message } from "../egg_api.js";
 
-async function getArchive(context) {
-	return postMessage(
+async function get_archive(context) {
+	return post_message(
 		context,
 		"/ei_ctx/get_contracts_archive",
-		basicRequest(context, context.params.eid),
+		basic_request(context, context.params.eid),
 		context.proto.ContractsArchive,
 	);
 }
 
 async function handle(_request, context) {
-	const archive = await getArchive(context);
+	const archive = await get_archive(context);
 	return new Response(JSON.stringify(archive.toObject()));
 }
 
-export { getArchive, handle };
+export { get_archive, handle };
