@@ -45,4 +45,4 @@ async function handle(request, context) {
 	}
 }
 
-module.exports = { handle };
+export { handle };

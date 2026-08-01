@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer';
-const { createAuthHash, decompressMessage } = require("../utils/tools");
+import { createAuthHash, decompressMessage } from "../utils/tools.js";
 
 async function handle(request, context) {
     const searchParams = new URL(request.url).searchParams;
@@ -45,4 +45,4 @@ async function handle(request, context) {
     }
 }
 
-module.exports = { handle };
+export { handle };

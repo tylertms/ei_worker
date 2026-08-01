@@ -1,4 +1,4 @@
-const proto = require('../ei_pb');
+import proto from "../ei_pb.cjs";
 
 function bigNumberToString(number, decimals, strLen) {
     var letters = {
@@ -109,7 +109,7 @@ async function decompressMessage(authMsg) {
     }
 }
 
-module.exports = {
+export {
 	bigNumberToString,
 	convertGrade,
 	getEggName,

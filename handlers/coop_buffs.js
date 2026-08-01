@@ -1,4 +1,4 @@
-const { handle: handleCoopStatus } = require("./contract");
+import { handle as handleCoopStatus } from "./contract.js";
 
 async function handle(request, context) {
 	try {
@@ -47,4 +47,4 @@ async function handle(request, context) {
 	}
 }
 
-module.exports = { handle };
+export { handle };

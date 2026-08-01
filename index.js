@@ -1,4 +1,4 @@
-const proto = require('./ei_pb');
+import proto from "./ei_pb.cjs";
 const baseURL = "https://ctx-dot-auxbrainhome.appspot.com"
 
 //This must be updated since cloudflare workers can't read directories or do dynamic imports

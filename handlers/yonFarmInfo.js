@@ -1,4 +1,4 @@
-const {
+import {
 	bigNumberToString,
 	convertGrade,
 	getEggName,
@@ -6,10 +6,10 @@ const {
 	getBuffLevel,
 	getArtifactName,
 	getArtifactRarity,
-	getArtifactLevel
-} = require("../utils/tools");
-const { handle: handleBackup } = require("./backup");
-const { handle: handlePeriodicals } = require('./periodicals');
+	getArtifactLevel,
+} from "../utils/tools.js";
+import { handle as handleBackup } from "./backup.js";
+import { handle as handlePeriodicals } from "./periodicals.js";
 
 async function handle(request, context) {
 	try {
@@ -208,7 +208,7 @@ async function handle(request, context) {
 	}
 }
 
-module.exports = { handle };
+export { handle };
 
 
 const boostIds = [
