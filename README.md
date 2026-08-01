@@ -2,26 +2,26 @@
 
 ei_worker makes it easy to interact with the Egg, Inc. API using HTTP requests and JSON.
 
-Base URL: `https://ei_worker.tylertms.workers.dev`
+<https://ei_worker.tylertms.workers.dev>
 
 ## Endpoints
 
 | Endpoint             | Parameters                    | Response                                                        |
 | -------------------- | ----------------------------- | --------------------------------------------------------------- |
-| `/active_artifacts`  | `eid`, optional `contract`    | Equipped artifacts as JSON                                      |
-| `/active_missions`   | `eid`, optional `reset_index` | Active artifact missions as JSON                                |
-| `/afx_config`        | `eid`                         | Artifact configuration as JSON                                  |
-| `/archive`           | `eid`                         | Contract archive as JSON                                        |
-| `/backup`            | `eid`                         | Player backup as JSON                                           |
-| `/completed_mission` | `eid`, `mission_id`           | Completed mission as JSON                                       |
-| `/contract`          | `eid`, `contract`, `coop`     | Coop status as JSON                                             |
+| `/active_artifacts`  | `eid`, optional `contract`    | Equipped artifacts                                              |
+| `/active_missions`   | `eid`, optional `reset_index` | Active artifact missions                                        |
+| `/afx_config`        | `eid`                         | Artifact configuration                                          |
+| `/archive`           | `eid`                         | Contract archive                                                |
+| `/backup`            | `eid`                         | Player backup                                                   |
+| `/completed_mission` | `eid`, `mission_id`           | Completed missions                                              |
+| `/contract`          | `eid`, `contract`, `coop`     | Coop status                                                     |
 | `/coop_buffs`        | `eid`, `contract`, `coop`     | Deflector and SIAB totals as CSV                                |
-| `/leaderboard`       | `eid`, `scope`, `grade`       | Leaderboard as JSON                                             |
-| `/leaderboard_info`  | None                          | Leaderboard metadata as JSON                                    |
+| `/leaderboard`       | `eid`, `scope`, `grade`       | Leaderboard data                                                |
+| `/leaderboard_info`  | None                          | Leaderboard metadata                                            |
 | `/minmax_cxp_change` | `eid`                         | Highest and lowest contract XP change as text                   |
-| `/periodicals`       | `eid`                         | Current contracts and events as JSON                            |
-| `/season_info`       | None                          | Contract season metadata as JSON                                |
-| `/sub_status`        | `eid`                         | Subscription status as JSON                                     |
+| `/periodicals`       | `eid`                         | Current contracts and events                                    |
+| `/season_info`       | None                          | Contract season metadata                                        |
+| `/sub_status`        | `eid`                         | Subscription status                                             |
 | `/yon_farm_info`     | `eid`                         | Farm, research, artifact, event, and colleggtible report as CSV |
 
 Examples:
@@ -52,7 +52,7 @@ Errors use this JSON shape:
 
 Requires Node.js 22 or newer.
 
-```powershell
+```
 git clone https://github.com/tylertms/ei_worker.git
 cd ei_worker
 npm ci
