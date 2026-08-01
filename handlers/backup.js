@@ -1,7 +1,7 @@
 import { Buffer } from 'node:buffer';
 
 async function handle(request, context) {
-	const EID = new URL(request.url).searchParams.get('EID');
+	const { eid: EID } = context.params;
 
 	try {
 

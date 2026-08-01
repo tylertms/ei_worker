@@ -1,9 +1,7 @@
 import { Buffer } from 'node:buffer';
 
 async function handle(request, context) {
-	const searchParams = new URL(request.url).searchParams;
-	const EID = searchParams.get('EID');
-	const contract = searchParams.get('contract');
+	const { contract, eid: EID } = context.params;
 
 	try {
 
@@ -30,7 +28,7 @@ async function handle(request, context) {
         const backup = fcresp.toObject().backup;
         
         var farmIndex = 0;
-        if (contract !== null) {
+        if (contract !== undefined) {
             farmIndex = backup.farmsList.findIndex(c => c.contractId === contract);
         } else {
             farmIndex = backup.farmsList.findIndex(c => c.farmType === 2);

@@ -2,7 +2,7 @@ import { Buffer } from 'node:buffer';
 import { decompressMessage } from "../utils/tools.js";
 
 async function handle(request, context) {
-	const EID = new URL(request.url).searchParams.get('EID');
+	const { eid: EID } = context.params;
 
 	try {
 		const pr = new context.proto.GetPeriodicalsRequest()

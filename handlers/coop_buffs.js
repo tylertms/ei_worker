@@ -5,8 +5,7 @@ async function handle(request, context) {
 		const coopStatus = JSON.parse(
 			await (await handleCoopStatus(request, context)).text()
 		);
-		const reqParams = new URL(request.url).searchParams;
-		const EID = reqParams.get("EID");
+		const { eid: EID } = context.params;
 
 		let deflectorBuff = 0;
 		let siabBuff = 0;

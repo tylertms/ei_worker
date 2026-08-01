@@ -2,9 +2,7 @@ import { Buffer } from 'node:buffer';
 import { decompressMessage } from "../utils/tools.js";
 
 async function handle(request, context) {
-    const searchParams = new URL(request.url).searchParams;
-    const EID = searchParams.get('EID');
-    const missionId = searchParams.get('id');
+    const { eid: EID, mission_id: missionId } = context.params;
 
     try {
         const basicRequestInfo = new context.proto.BasicRequestInfo()

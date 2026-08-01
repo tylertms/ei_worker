@@ -2,10 +2,7 @@ import { Buffer } from 'node:buffer';
 import { createAuthHash, decompressMessage } from "../utils/tools.js";
 
 async function handle(request, context) {
-    const searchParams = new URL(request.url).searchParams;
-    const EID = searchParams.get('EID');
-    const scope = searchParams.get('scope');
-    const grade = searchParams.get('grade');
+    const { eid: EID, grade, scope } = context.params;
 
     try {
         const bri = new context.proto.BasicRequestInfo()

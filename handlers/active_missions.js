@@ -2,9 +2,7 @@ import { Buffer } from "node:buffer";
 import { createAuthHash, decompressMessage } from "../utils/tools.js";
 
 async function handle(request, context) {
-	const params = new URL(request.url).searchParams;
-	const EID = params.get("EID");
-	const resetIndex = params.get("resetIndex");
+	const { eid: EID, reset_index: resetIndex } = context.params;
 
 	try {
 		const bri = new context.proto.BasicRequestInfo()
@@ -13,8 +11,8 @@ async function handle(request, context) {
 
 		let resetCount;
 
-		if (resetIndex) {
-			resetCount = parseInt(resetIndex);
+		if (resetIndex !== undefined) {
+			resetCount = resetIndex;
 		} else {
 			const fcr = new context.proto.EggIncFirstContactRequest()
 				.setRinfo(bri)
