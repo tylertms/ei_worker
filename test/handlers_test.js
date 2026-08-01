@@ -10,6 +10,7 @@ import { build_events } from "../handlers/events.js";
 import { build_farms } from "../handlers/farms.js";
 import { get_cxp_extremes } from "../handlers/minmax_cxp_change.js";
 import { build_missions } from "../handlers/missions.js";
+import { build_player_summary } from "../handlers/player_summary.js";
 import { find_farm_index, get_active_artifacts, select_report_farms } from "../utils/artifacts.js";
 import { get_colleggtible_rows, get_maximum_farm_sizes } from "../utils/colleggtibles.js";
 
@@ -343,4 +344,37 @@ test("builds read-only mission state with snake case fields", () => {
 	assert.equal(missions.archive[0].identifier, "archived");
 	assert.equal(missions.progress[0].reference_value, 4);
 	assert.equal(missions.returned[0].success, true);
+});
+
+test("builds a compact player summary", () => {
+	const summary = build_player_summary(
+		{
+			artifacts: { craftingXp: 2, enabled: true, inventoryScore: 3 },
+			artifactsDb: { inventoryItemsList: [{}, {}], missionInfosList: [{}] },
+			contracts: { archiveList: [{}], contractsList: [] },
+			eiUserId: "EI123",
+			farmsList: [{ farmType: 2, numChickens: 10 }],
+			game: {
+				eggsOfProphecy: 4,
+				goldenEggsEarned: 10,
+				goldenEggsSpent: 3,
+				maxEggReached: 1,
+				soulEggsD: 5,
+			},
+			subInfo: { autoRenew: true, subscriptionLevel: 2 },
+			userName: "Player",
+		},
+		{
+			artifactCasesList: [{}],
+			contractPlayerInfo: { grade: 5, totalCxp: 20 },
+		},
+	);
+
+	assert.equal(summary.ei_user_id, "EI123");
+	assert.equal(summary.game.golden_eggs, 7);
+	assert.equal(summary.contracts.grade.name, "AAA");
+	assert.equal(summary.artifacts.inventory_items, 2);
+	assert.equal(summary.artifacts.returned_missions, 1);
+	assert.equal(summary.farms.home_population, 10);
+	assert.equal(summary.subscription.auto_renew, true);
 });

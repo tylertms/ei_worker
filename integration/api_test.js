@@ -175,6 +175,15 @@ test("retrieves and decodes live subscription status", { timeout }, async () => 
 	assert.equal(typeof subscription, "object");
 });
 
+test("retrieves a live player summary", { timeout }, async () => {
+	const summary = await get_json("player_summary", { eid: test_eid });
+	assert.equal(summary.ei_user_id, test_eid);
+	assert.equal(typeof summary.game.soul_eggs, "number");
+	assert.equal(typeof summary.contracts.grade.name, "string");
+	assert.equal(typeof summary.artifacts.inventory_items, "number");
+	assert.equal(typeof summary.farms.total, "number");
+});
+
 test("retrieves live contract XP extremes", { timeout }, async () => {
 	const response = await get_live_response("minmax_cxp_change", { eid: test_eid });
 	if (response.status === 404) {
